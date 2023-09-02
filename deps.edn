@@ -1,0 +1,13 @@
+{:deps        {org.clojure/clojure    {:mvn/version "1.11.1"}
+               org.clojure/tools.deps {:mvn/version "0.18.1354"}
+               org.slf4j/slf4j-nop    {:mvn/version "2.0.7"}}
+ :paths       ["src"]
+ :tools/usage {:ns-default com.github.ivarref.finddep}
+ :aliases     {:build {:deps       {com.github.liquidz/build.edn {:mvn/version "0.10.227"}}
+                       :ns-default build-edn.main}
+               :test                                        ;; added by neil
+               {:extra-paths ["test"]
+                :extra-deps  {io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}
+                              org.clj-commons/pretty               {:mvn/version "2.1.1"}}
+                :main-opts   ["-m" "cognitect.test-runner"]
+                :exec-fn     cognitect.test-runner.api/test}}}
