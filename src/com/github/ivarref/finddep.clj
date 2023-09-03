@@ -1,10 +1,11 @@
 (ns com.github.ivarref.finddep
+  (:refer-clojure :exclude [find])
   (:require [clojure.java.io :as jio]
             [clojure.set :as set]
             [clojure.string :as str]
             [clojure.tools.deps :as deps]
-            [clojure.tools.deps.util.session :as session])
-  (:refer-clojure :exclude [find]))
+            [clojure.tools.deps.util.session :as session]
+            [fzf.core :as fz]))
 
 (comment
   (do
@@ -161,29 +162,36 @@
       (when (= #{} dependents)
         (show-tree libs root 0 false)))))
 
-(defn find [{:keys [name]}]
-  (cond (not (.exists (jio/file "deps.edn")))
-        (do
-          (binding [*out* *err*]
-            (println "Error. Not a tools.deps project. Missing deps.edn"))
-          (System/exit 1))
+(defn require-deps-edn! []
+  (when (not (.exists (jio/file "deps.edn")))
+    (binding [*out* *err*]
+      (println "Error. Not a tools.deps project. Missing deps.edn"))
+    (System/exit 1)))
 
-        :else
-        (let [libs (get-libs)
-              needles (find-needles libs (if (or (= name :all)
-                                                 (= name :*))
-                                           ""
-                                           name))
-              libs (libs-with-needles libs needles)]
-          (if (= needles #{})
-            (binding [*out* *err*]
-              (println (str "No matches found for '" name "'."))
-              (println "Was is a typo?")
-              (System/exit 1))
-            (let [roots (->> libs
-                             (filter (fn [[_k {:keys [dependents]}]]
-                                       (= dependents #{})))
-                             (sort-by (fn [[k _]] (depth libs k)))
-                             (reverse))]
-              (doseq [[root _] roots]
-                (show-tree libs root 0 false)))))))
+(defn find [{:keys [name]}]
+  (require-deps-edn!)
+  (let [libs (get-libs)
+        needles (find-needles libs (if (or (= name :all)
+                                           (= name :*))
+                                     ""
+                                     name))
+        libs (libs-with-needles libs needles)]
+    (if (= needles #{})
+      (binding [*out* *err*]
+        (println (str "No matches found for '" name "'."))
+        (println "Was is a typo?")
+        (System/exit 1))
+      (let [roots (->> libs
+                       (filter (fn [[_k {:keys [dependents]}]]
+                                 (= dependents #{})))
+                       (sort-by (fn [[k _]] (depth libs k)))
+                       (reverse))]
+        (doseq [[root _] roots]
+          (show-tree libs root 0 false))))))
+
+(defn fzf [_]
+  (require-deps-edn!)
+  (let [libs (get-libs)]
+    (if-let [v (fz/fzf (into [] (mapv str (sort (keys libs)))))]
+      (find {:name v})
+      (println "Nothing selected, exiting"))))

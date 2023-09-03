@@ -1,6 +1,7 @@
-{:deps        {org.clojure/clojure    {:mvn/version "1.11.1"}
-               org.clojure/tools.deps {:mvn/version "0.18.1354"}
-               org.slf4j/slf4j-nop    {:mvn/version "2.0.7"}}
+{:deps        {org.clojure/clojure        {:mvn/version "1.11.1"}
+               org.clojure/tools.deps     {:mvn/version "0.18.1354"}
+               org.slf4j/slf4j-nop        {:mvn/version "2.0.7"}
+               io.github.joakimen/fzf.clj {:git/sha "78331ec4d2b2f5e8530ebdb2df60fd8cacab3c16"}}
  :paths       ["src"]
  :tools/usage {:ns-default com.github.ivarref.finddep}
  :aliases     {:build {:deps       {com.github.liquidz/build.edn {:mvn/version "0.10.227"}}
