@@ -5,7 +5,16 @@
             [clojure.string :as str]
             [clojure.tools.deps :as deps]
             [clojure.tools.deps.util.session :as session]
-            [fzf.core :as fz]))
+            [clojure.tools.gitlibs]
+            [clojure.tools.deps.util.maven]
+            [clojure.tools.deps.extensions.git]
+            [fzf.core :as fz])
+  (:import (java.lang.reflect Field)
+           (org.apache.maven.settings DefaultMavenSettingsBuilder))
+           ;(org.graalvm.nativeimage.hosted RuntimeReflection))
+  (:gen-class))
+
+(def fld ^Field (.getDeclaredField DefaultMavenSettingsBuilder "settingsBuilder"))
 
 (comment
   (do
@@ -192,6 +201,13 @@
 (defn fzf [_]
   (require-deps-edn!)
   (let [libs (get-libs)]
-    (if-let [v (fz/fzf (into [] (mapv str (sort (keys libs)))))]
+    (if-let [v (fz/fzf {:preview-fn (fn [selected]
+                                      (with-out-str (find {:name (str selected)})))}
+                       (into [] (mapv str (sort (keys libs)))))]
       (find {:name v})
       (println "Nothing selected, exiting"))))
+
+(defn -main
+  "Entrypoint for finddep app"
+  [& args]
+  (fzf nil))

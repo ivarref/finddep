@@ -4,3 +4,6 @@
 .nrepl-port
 target/
 .clj-kondo/.cache
+classes/
+pom.xml
+finddep
