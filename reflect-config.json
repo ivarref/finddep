@@ -96,6 +96,9 @@
   "name" : "org.eclipse.aether.internal.impl.synccontext.DefaultSyncContextFactory",
   "allDeclaredConstructors" : true
 }, {
+  "name" : "org.eclipse.aether.internal.impl.synccontext.legacy.DefaultSyncContextFactory",
+  "allDeclaredConstructors" : true
+}, {
   "name" : "org.eclipse.aether.internal.impl.synccontext.named.SimpleNamedLockFactorySelector",
   "allDeclaredConstructors" : true
 }, {

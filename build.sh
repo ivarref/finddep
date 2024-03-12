@@ -21,6 +21,13 @@ rm -v ./out.txt || true
 
 head -n10 out.txt
 
+rm -v ./fixed.txt || true
+
 bb ./fix.clj
+
+if [[ -f "./fixed.txt" ]]; then
+    echo "re-launching ... :-)";
+    ./build.sh
+fi
 
 #clojure -M:build

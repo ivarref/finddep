@@ -21,4 +21,7 @@
     (println "adding" lin)
     (add-to-config! lin)))
 
+(when (not-empty lines)
+  (spit "fixed.txt" "fixed some :-)"))
+
 (println "done fix!")
