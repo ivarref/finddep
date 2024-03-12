@@ -31,6 +31,18 @@
     "allDeclaredConstructors": true
   },
   {
+    "name": "org.eclipse.aether.internal.impl.DefaultMetadataResolver",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultArtifactResolver",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultRepositoryEventDispatcher",
+    "allDeclaredConstructors": true
+  },
+  {
     "name": "java.lang.String[]"
   },
   {
