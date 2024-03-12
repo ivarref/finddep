@@ -217,4 +217,4 @@
     (println "reposystem:" (.getService locator RepositorySystem))
     (println "locator:" locator))
   (println "system is:" (mvn-util/make-system))
-  #_(fzf nil))
+  (fzf nil))

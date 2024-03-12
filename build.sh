@@ -10,8 +10,15 @@ clojure -X:depstar && \
 native-image com.github.ivarref.finddep -cp target/uber.jar \
 --enable-url-protocols=http,https \
 --initialize-at-build-time \
+--initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl \
 -H:IncludeResources=clojure/tools/deps/deps.edn \
 -H:IncludeResources=clojure/tools/deps/license-abbrev.edn \
+-H:IncludeResources=org/apache/maven/model/pom-4.0.0.xml \
+-H:IncludeResources=deps/pom.properties \
+-H:IncludeResources=deps/pom.xml \
+-H:IncludeResources=jetty/jetty-util/pom.properties \
+-H:IncludeResources=jetty/jetty-util/pom.xml \
+-H:IncludeResources=org/eclipse/jetty/version/build.properties \
 -H:ReflectionConfigurationFiles=reflect-config.json \
 -H:Name=finddep \
 --no-fallback && \
