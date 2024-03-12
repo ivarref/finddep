@@ -1,16 +1,21 @@
 (ns com.github.ivarref.finddep
   (:refer-clojure :exclude [find])
   (:require [clojure.java.io :as jio]
+            [clojure.pprint :as pprint]
             [clojure.set :as set]
             [clojure.string :as str]
             [clojure.tools.deps :as deps]
+            [clojure.tools.deps.tree :as tree]
             [clojure.tools.deps.util.session :as session]
             [clojure.tools.gitlibs]
             [clojure.tools.deps.util.maven :as mvn-util]
+            [clojure.tools.deps.util.io :as io :refer [printerrln]]
             [clojure.tools.deps.extensions.git]
+            [clojure.tools.deps.script.make-classpath2 :as make-cp2]
             [fzf.core :as fz])
   (:gen-class)
   (:import (Janei Janei)
+           (clojure.lang IExceptionInfo)
            (org.eclipse.aether.impl DefaultServiceLocator)))
 
 ;DefaultRepositorySystem
@@ -210,13 +215,46 @@
       (find {:name v})
       (println "Nothing selected, exiting"))))
 
+
+(defn run
+  "Run make-classpath script. See -main for details."
+  [{:keys [config-user config-project cp-file jvm-file main-file basis-file manifest-file skip-cp trace tree] :as opts}]
+  (let [opts' (merge opts {:install-deps (deps/root-deps)
+                           :user-deps (make-cp2/read-deps config-user)
+                           :project-deps (make-cp2/read-deps config-project)
+                           :tool-resolver make-cp2/resolve-tool-args})
+        {:keys [basis manifests], trace-log :trace} (make-cp2/run-core opts')
+        {:keys [argmap libs classpath-roots]} basis
+        {:keys [jvm-opts main-opts]} argmap]
+    (when trace
+      (spit "trace.edn" (binding [*print-namespace-maps* false] (with-out-str (pprint/pprint trace-log)))))
+    (when tree
+      (-> trace-log tree/trace->tree (tree/print-tree nil)))
+    libs))
+
+(defn runrun [args]
+  (let [{:keys [options errors]} (make-cp2/parse-opts args)]
+    (when (seq errors)
+      (run! println errors)
+      (System/exit 1))
+    (run options)))
+
+(comment
+  (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"]))
+
+
+(defn entrypoint [_]
+  (prn (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"])))
+
 (defn -main
   "Entrypoint for finddep app"
   [& args]
-  (let [locator ^DefaultServiceLocator (mvn-util/make-locator)]
-    (.setErrorHandler locator (Janei.)))
-    ;(println "reposystem:" (.getService locator RepositorySystem))
-    ;(println "locator:" locator))
-  ;(println "system is:" (mvn-util/make-system))
-  (fzf nil)
+  (try
+    (runrun args)
+    (catch Throwable t
+      (printerrln "Error building classpath." (.getMessage t))
+      (printerrln "Ex-data:" (ex-data t))
+      (when-not (instance? IExceptionInfo t)
+        (.printStackTrace t))
+      (System/exit 1)))
   (shutdown-agents))

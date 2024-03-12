@@ -9,6 +9,8 @@
  :aliases     {#_:build #_{:deps       {com.github.liquidz/build.edn {:mvn/version "0.10.227"}}
                            :ns-default build-edn.main}
 
+               :run {:exec-fn com.github.ivarref.finddep/entrypoint}
+
                :depstar
                {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
                 :ns-default   hf.depstar
