@@ -14,14 +14,12 @@
                 :ns-default   hf.depstar
                 :aliases      [:graal-compile]
                 :exec-fn      hf.depstar/uberjar
-                :exec-args    {:group-id    "com.phronemophobic.mobiletest"
-                               :artifact-id "membrane"
-                               :version     "1.00-beta-1"
+                :exec-args    {:group-id    "com.github.ivarref"
+                               :artifact-id "finddep"
+                               :version     "0.1.1"
                                :sync-pom    true
                                :aot         true
-                               :compile-ns  [;;avclj.main avclj.libavclj
-                                             com.github.ivarref.finddep]
-
+                               :compile-ns  [com.github.ivarref.finddep]
                                :main-class  com.github.ivarref.finddep
                                :jar         "target/uber.jar"
                                ;;Disable tensor code generation and ensure direct linking.

@@ -202,7 +202,12 @@
 
 (defn fzf [_]
   (require-deps-edn!)
-  (let [libs (get-libs)]
+  (let [libs (try
+               (get-libs)
+               (catch Throwable t
+                 (println "Error during get-libs:")
+                 (.printStackTrace t)
+                 (throw t)))]
     (if-let [v (fz/fzf {:preview-fn (fn [selected]
                                       (with-out-str (find {:name (str selected)})))}
                        (into [] (mapv str (sort (keys libs)))))]
@@ -213,9 +218,9 @@
   "Entrypoint for finddep app"
   [& args]
   (let [locator ^DefaultServiceLocator (mvn-util/make-locator)]
-    (.setErrorHandler locator (Janei.))
-    (println "reposystem:" (.getService locator RepositorySystem))
-    (println "locator:" locator))
-  (println "system is:" (mvn-util/make-system))
+    (.setErrorHandler locator (Janei.)))
+    ;(println "reposystem:" (.getService locator RepositorySystem))
+    ;(println "locator:" locator))
+  ;(println "system is:" (mvn-util/make-system))
   (fzf nil)
   (shutdown-agents))
