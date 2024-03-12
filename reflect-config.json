@@ -43,6 +43,34 @@
     "allDeclaredConstructors": true
   },
   {
+    "name": "org.eclipse.aether.internal.impl.DefaultUpdateCheckManager",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultTrackingFileManager",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultChecksumPolicyProvider",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultDeployer",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultFileProcessor",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultInstaller",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultUpdatePolicyAnalyzer",
+    "allDeclaredConstructors": true
+  },
+  {
     "name": "java.lang.String[]"
   },
   {
