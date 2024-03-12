@@ -254,7 +254,7 @@
     (catch Throwable t
       (printerrln "Error building classpath." (.getMessage t))
       (printerrln "Ex-data:" (ex-data t))
-      (when-not (instance? IExceptionInfo t)
-        (.printStackTrace t))
+      ;(when-not (instance? IExceptionInfo t)
+      (.printStackTrace t)
       (System/exit 1)))
   (shutdown-agents))
