@@ -15,6 +15,22 @@
     "allDeclaredFields": true
   },
   {
+    "name": "org.eclipse.aether.internal.impl.DefaultRepositorySystem",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultVersionResolver",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.maven.repository.internal.DefaultVersionRangeResolver",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.maven.repository.internal.DefaultVersionResolver",
+    "allDeclaredConstructors": true
+  },
+  {
     "name": "java.lang.String[]"
   },
   {

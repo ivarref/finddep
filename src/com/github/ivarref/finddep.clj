@@ -6,16 +6,18 @@
             [clojure.tools.deps :as deps]
             [clojure.tools.deps.util.session :as session]
             [clojure.tools.gitlibs]
-            [clojure.tools.deps.util.maven]
+            [clojure.tools.deps.util.maven :as mvn-util]
             [clojure.tools.deps.extensions.git]
             [fzf.core :as fz])
-  (:import (java.lang.reflect Field)
-           (org.apache.maven.settings DefaultMavenSettingsBuilder))
-           ;(org.graalvm.nativeimage.hosted RuntimeReflection))
-  (:gen-class))
+  ;(org.graalvm.nativeimage.hosted RuntimeReflection))
+  (:gen-class)
+  (:import (Janei Janei)
+           (org.eclipse.aether RepositorySystem)
+           (org.eclipse.aether.impl DefaultServiceLocator DefaultServiceLocator$ErrorHandler)
+           (org.eclipse.aether.internal.impl DefaultRepositorySystem)
+           (org.eclipse.aether.spi.locator ServiceLocator)))
 
-(def fld ^Field (.getDeclaredField DefaultMavenSettingsBuilder "settingsBuilder"))
-
+;DefaultRepositorySystem
 (comment
   (do
     (require '[clj-commons.pretty.repl])
@@ -210,4 +212,9 @@
 (defn -main
   "Entrypoint for finddep app"
   [& args]
-  (fzf nil))
+  (let [locator ^DefaultServiceLocator (mvn-util/make-locator)]
+    (.setErrorHandler locator (Janei.))
+    (println "reposystem:" (.getService locator RepositorySystem))
+    (println "locator:" locator))
+  (println "system is:" (mvn-util/make-system))
+  #_(fzf nil))

@@ -2,6 +2,7 @@
                org.clojure/tools.deps    {:mvn/version "0.19.1417"}
                org.slf4j/slf4j-nop       {:mvn/version "2.0.7"}
                clansi/clansi             {:mvn/version "1.0.0"}
+               iredebug/iredebug         {:mvn/version "0.1.0-SNAPSHOT"}
                io.github.ivarref/fzf.clj {:git/sha "0632509846a18cb4780a0cec29a91cc455f9fa10"}}
  :paths       ["src"]
  :tools/usage {:ns-default com.github.ivarref.finddep}
@@ -10,23 +11,23 @@
 
                :depstar
                {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
-                :ns-default hf.depstar
-                :aliases [:graal-compile]
-                :exec-fn hf.depstar/uberjar
-                :exec-args {:group-id "com.phronemophobic.mobiletest"
-                            :artifact-id "membrane"
-                            :version "1.00-beta-1"
-                            :sync-pom true
-                            :aot true
-                            :compile-ns [;;avclj.main avclj.libavclj
-                                         com.github.ivarref.finddep]
+                :ns-default   hf.depstar
+                :aliases      [:graal-compile]
+                :exec-fn      hf.depstar/uberjar
+                :exec-args    {:group-id    "com.phronemophobic.mobiletest"
+                               :artifact-id "membrane"
+                               :version     "1.00-beta-1"
+                               :sync-pom    true
+                               :aot         true
+                               :compile-ns  [;;avclj.main avclj.libavclj
+                                             com.github.ivarref.finddep]
 
-                            :main-class com.github.ivarref.finddep
-                            :jar "target/uber.jar"
-                            ;;Disable tensor code generation and ensure direct linking.
-                            :jvm-opts ["-Dtech.v3.datatype.graal-native=true"
-                                       "-Dclojure.compiler.direct-linking=true"
-                                       "-Dclojure.spec.skip-macros=true"]}}
+                               :main-class  com.github.ivarref.finddep
+                               :jar         "target/uber.jar"
+                               ;;Disable tensor code generation and ensure direct linking.
+                               :jvm-opts    ["-Dtech.v3.datatype.graal-native=true"
+                                             "-Dclojure.compiler.direct-linking=true"
+                                             "-Dclojure.spec.skip-macros=true"]}}
 
                :build
                {:main-opts  ["-m" "clj.native-image"
@@ -39,7 +40,7 @@
                              "--no-fallback"]
                 :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
                 :extra-deps {clj.native-image/clj.native-image {:local/root "/home/ire/code/gh/clj.native-image"}}}
-                                                                ;:sha     "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}
+               ;:sha     "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}
 
                :test                                        ;; added by neil
                {:extra-paths ["test"]

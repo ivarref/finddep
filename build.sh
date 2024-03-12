@@ -11,8 +11,10 @@ native-image com.github.ivarref.finddep -cp target/uber.jar \
 --enable-url-protocols=http,https \
 --initialize-at-build-time \
 -H:IncludeResources=clojure/tools/deps/deps.edn \
+-H:IncludeResources=clojure/tools/deps/license-abbrev.edn \
 -H:ReflectionConfigurationFiles=reflect-config.json \
 -H:Name=finddep \
---no-fallback
+--no-fallback && \
+./finddep
 
 #clojure -M:build
