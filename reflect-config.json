@@ -1,4 +1,7 @@
 [ {
+  "name" : "clojure.tools.deps.util.S3TransporterFactory",
+  "allDeclaredConstructors" : true
+}, {
   "name" : "java.io.File",
   "allPublicMethods" : true
 }, {
@@ -54,6 +57,9 @@
   "name" : "org.eclipse.aether.internal.impl.DefaultMetadataResolver",
   "allDeclaredConstructors" : true
 }, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultOfflineController",
+  "allDeclaredConstructors" : true
+}, {
   "name" : "org.eclipse.aether.internal.impl.DefaultRemoteRepositoryManager",
   "allDeclaredConstructors" : true
 }, {
@@ -61,6 +67,9 @@
   "allDeclaredConstructors" : true
 }, {
   "name" : "org.eclipse.aether.internal.impl.DefaultRepositoryEventDispatcher",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultRepositoryLayoutProvider",
   "allDeclaredConstructors" : true
 }, {
   "name" : "org.eclipse.aether.internal.impl.DefaultRepositorySystem",
@@ -81,6 +90,18 @@
   "name" : "org.eclipse.aether.internal.impl.DefaultVersionResolver",
   "allDeclaredConstructors" : true
 }, {
+  "name" : "org.eclipse.aether.internal.impl.Maven2RepositoryLayoutFactory",
+  "allDeclaredConstructors" : true
+}, {
   "name" : "org.eclipse.aether.internal.impl.synccontext.DefaultSyncContextFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.synccontext.named.SimpleNamedLockFactorySelector",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.transport.file.FileTransporterFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.transport.http.HttpTransporterFactory",
   "allDeclaredConstructors" : true
 } ]
