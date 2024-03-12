@@ -71,6 +71,22 @@
     "allDeclaredConstructors": true
   },
   {
+    "name": "org.eclipse.aether.internal.impl.DefaultLocalPathComposer",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultLocalPathPrefixComposerFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultLocalRepositoryProvider",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.eclipse.aether.internal.impl.DefaultRepositoryConnectorProvider",
+    "allDeclaredConstructors": true
+  },
+  {
     "name": "java.lang.String[]"
   },
   {
