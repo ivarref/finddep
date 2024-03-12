@@ -2,8 +2,10 @@
 
 # sdk install java 21.0.2-graalce
 
-export GRAALVM_HOME=$HOME/.sdkman/candidates/java/21.0.2-graalce
-export PATH=$GRAALVM_HOME/bin:$PATH
+if [ -z ${GRAALVM_HOME+x} ]; then
+  export GRAALVM_HOME=$HOME/.sdkman/candidates/java/21.0.2-graalce
+  export PATH=$GRAALVM_HOME/bin:$PATH
+fi
 
 rm -v ./finddep || true
 clojure -X:depstar && \
