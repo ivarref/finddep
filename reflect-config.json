@@ -18,10 +18,19 @@
     "parameterTypes" : [ "java.lang.Object" ]
   } ]
 }, {
+  "name" : "org.apache.maven.repository.internal.DefaultArtifactDescriptorReader",
+  "allDeclaredConstructors" : true
+}, {
   "name" : "org.apache.maven.repository.internal.DefaultVersionRangeResolver",
   "allDeclaredConstructors" : true
 }, {
   "name" : "org.apache.maven.repository.internal.DefaultVersionResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.repository.internal.SnapshotMetadataGeneratorFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.repository.internal.VersionsMetadataGeneratorFactory",
   "allDeclaredConstructors" : true
 }, {
   "name" : "org.apache.maven.settings.DefaultMavenSettingsBuilder",
@@ -90,7 +99,16 @@
   "name" : "org.eclipse.aether.internal.impl.DefaultVersionResolver",
   "allDeclaredConstructors" : true
 }, {
+  "name" : "org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory",
+  "allDeclaredConstructors" : true
+}, {
   "name" : "org.eclipse.aether.internal.impl.Maven2RepositoryLayoutFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector",
   "allDeclaredConstructors" : true
 }, {
   "name" : "org.eclipse.aether.internal.impl.synccontext.DefaultSyncContextFactory",
