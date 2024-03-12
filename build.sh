@@ -16,5 +16,8 @@ native-image com.github.ivarref.finddep -cp target/uber.jar \
 -H:Name=finddep \
 --no-fallback && \
 ./finddep
+./finddep > out.txt 2>&1
+
+head -n10 out.txt
 
 #clojure -M:build
