@@ -9,13 +9,9 @@
             [clojure.tools.deps.util.maven :as mvn-util]
             [clojure.tools.deps.extensions.git]
             [fzf.core :as fz])
-  ;(org.graalvm.nativeimage.hosted RuntimeReflection))
   (:gen-class)
   (:import (Janei Janei)
-           (org.eclipse.aether RepositorySystem)
-           (org.eclipse.aether.impl DefaultServiceLocator DefaultServiceLocator$ErrorHandler)
-           (org.eclipse.aether.internal.impl DefaultRepositorySystem)
-           (org.eclipse.aether.spi.locator ServiceLocator)))
+           (org.eclipse.aether.impl DefaultServiceLocator)))
 
 ;DefaultRepositorySystem
 (comment
@@ -203,7 +199,7 @@
 (defn fzf [_]
   (require-deps-edn!)
   (let [libs (try
-               (get-libs)
+               (time (get-libs))
                (catch Throwable t
                  (println "Error during get-libs:")
                  (.printStackTrace t)
