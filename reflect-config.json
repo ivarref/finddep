@@ -1,103 +1,86 @@
-[
-  {
-    "name": "java.io.File",
-    "allPublicMethods": true
-  },
-  {
-    "name": "java.lang.Object[]"
-  },
-  {
-    "name": "java.lang.String",
-    "allPublicMethods": true
-  },
-  {
-    "name": "org.apache.maven.settings.DefaultMavenSettingsBuilder",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultRepositorySystem",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultVersionResolver",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.apache.maven.repository.internal.DefaultVersionRangeResolver",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.apache.maven.repository.internal.DefaultVersionResolver",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultMetadataResolver",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultArtifactResolver",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultRepositoryEventDispatcher",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultUpdateCheckManager",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultTrackingFileManager",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultChecksumPolicyProvider",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultDeployer",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultFileProcessor",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultInstaller",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultUpdatePolicyAnalyzer",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultLocalPathComposer",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultLocalPathPrefixComposerFactory",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultLocalRepositoryProvider",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.eclipse.aether.internal.impl.DefaultRepositoryConnectorProvider",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "java.lang.String[]"
-  },
-  {
-    "name": "java.lang.reflect.AccessibleObject",
-    "methods": [
-      {
-        "name": "canAccess",
-        "parameterTypes": [
-          "java.lang.Object"
-        ]
-      }
-    ]
-  }
-]
+[ {
+  "name" : "java.io.File",
+  "allPublicMethods" : true
+}, {
+  "name" : "java.lang.Object[]"
+}, {
+  "name" : "java.lang.String",
+  "allPublicMethods" : true
+}, {
+  "name" : "java.lang.String[]"
+}, {
+  "name" : "java.lang.reflect.AccessibleObject",
+  "methods" : [ {
+    "name" : "canAccess",
+    "parameterTypes" : [ "java.lang.Object" ]
+  } ]
+}, {
+  "name" : "org.apache.maven.repository.internal.DefaultVersionRangeResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.repository.internal.DefaultVersionResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.settings.DefaultMavenSettingsBuilder",
+  "allDeclaredFields" : true
+}, {
+  "name" : "org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultArtifactResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultChecksumPolicyProvider",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultDeployer",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultFileProcessor",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultInstaller",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultLocalPathComposer",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultLocalPathPrefixComposerFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultLocalRepositoryProvider",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultMetadataResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultRemoteRepositoryManager",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultRepositoryConnectorProvider",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultRepositoryEventDispatcher",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultRepositorySystem",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultTrackingFileManager",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultTransporterProvider",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultUpdateCheckManager",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultUpdatePolicyAnalyzer",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.DefaultVersionResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.eclipse.aether.internal.impl.synccontext.DefaultSyncContextFactory",
+  "allDeclaredConstructors" : true
+} ]
