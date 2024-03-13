@@ -19,7 +19,7 @@ native-image com.github.ivarref.finddep -cp target/uber.jar \
 -H:ReflectionConfigurationFiles=reflect-config.json \
 -H:Name=finddep \
 --no-fallback && \
-./finddep --config-user $HOME/.clojure/deps.edn --config-project $(pwd)/deps.edn --trace --tree --threads 1
+./finddep
 #rm -v ./out.txt || true
 #./finddep > out.txt 2>&1
 #

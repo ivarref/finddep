@@ -1,6 +1,7 @@
 (ns com.github.ivarref.finddep
   (:refer-clojure :exclude [find])
-  (:require [clojure.java.io :as jio]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as jio]
             [clojure.pprint :as pprint]
             [clojure.set :as set]
             [clojure.string :as str]
@@ -218,10 +219,14 @@
 
 (defn run
   "Run make-classpath script. See -main for details."
-  [{:keys [config-user config-project cp-file jvm-file main-file basis-file manifest-file skip-cp trace tree] :as opts}]
-  (let [opts' (merge opts {:install-deps (deps/root-deps)
-                           :user-deps (make-cp2/read-deps config-user)
-                           :project-deps (make-cp2/read-deps config-project)
+  [{:keys [config-user config-project project-deps cp-file jvm-file main-file basis-file manifest-file skip-cp trace tree] :as opts}]
+  (println "opts is:" opts)
+  (prn opts)
+  (spit "opts.edn" (with-out-str (prn opts)))
+  (let [project-deps (edn/read-string "{:deps {com.datomic/peer #:mvn{:version \"1.0.7075\"}}}")
+        opts' (merge opts {:install-deps  (deps/root-deps)
+                           :user-deps     (make-cp2/read-deps config-user)
+                           :project-deps  project-deps #_(make-cp2/read-deps config-project)
                            :tool-resolver make-cp2/resolve-tool-args})
         {:keys [basis manifests], trace-log :trace} (make-cp2/run-core opts')
         {:keys [argmap libs classpath-roots]} basis
@@ -240,21 +245,41 @@
     (run options)))
 
 (comment
-  (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"]))
+  (def dbg (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"])))
 
 
 (defn entrypoint [_]
   (prn (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"])))
 
+(comment
+  (do
+    (require '[wiretap.wiretap :as wiretap])
+    (wiretap/install!
+      #(do
+         (when (:pre? %)
+           (println (pr-str (:args %)))
+           (prn "args:" (:args %))
+           (prn "args:" (count (:args %))))
+         (println (if (:pre? %) ">" "<") (:name %)))
+      [#'clojure.tools.deps/calc-basis])
+    (def dbg (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"]))))
+
+(comment
+  (apply clojure.tools.deps/calc-basis
+         (edn/read-string "({:paths [\"src\"], :deps {org.clojure/clojure #:mvn{:version \"1.11.2\"}, com.datomic/peer #:mvn{:version \"1.0.7075\"}}, :aliases {:deps {:replace-paths [], :replace-deps #:org.clojure{tools.deps.cli #:mvn{:version \"0.10.55\"}}, :ns-default clojure.tools.deps.cli.api, :ns-aliases {help clojure.tools.deps.cli.help}}, :test {:extra-paths [\"test\"]}}, :mvn/repos {\"central\" {:url \"https://repo1.maven.org/maven2/\"}, \"clojars\" {:url \"https://repo.clojars.org/\"}}} {:resolve-args {}, :classpath-args {}})\n")))
 (defn -main
   "Entrypoint for finddep app"
   [& args]
   (try
-    (runrun args)
+    #_(runrun args)
+    (prn (clojure.tools.deps.util.dir/*the-dir*))
+    (apply clojure.tools.deps/calc-basis
+           (edn/read-string "({:deps {org.clojure/clojure #:mvn{:version \"1.11.2\"}, com.datomic/peer #:mvn{:version \"1.0.7075\"}}, :mvn/repos {\"central\" {:url \"https://repo1.maven.org/maven2/\"}, \"clojars\" {:url \"https://repo.clojars.org/\"}}} {:resolve-args {}, :classpath-args {}})\n"))
     (catch Throwable t
       (printerrln "Error building classpath." (.getMessage t))
       (printerrln "Ex-data:" (ex-data t))
-      ;(when-not (instance? IExceptionInfo t)
       (.printStackTrace t)
+      (printerrln "Error building classpath." (.getMessage t))
+      (printerrln "Ex-data:" (ex-data t))
       (System/exit 1)))
   (shutdown-agents))
