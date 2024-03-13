@@ -24,6 +24,12 @@
   "name" : "org.apache.maven.repository.internal.DefaultVersionRangeResolver",
   "allDeclaredConstructors" : true
 }, {
+  "name" : "org.apache.maven.repository.internal.SnapshotMetadataGeneratorFactory",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.repository.internal.VersionsMetadataGeneratorFactory",
+  "allDeclaredConstructors" : true
+},{
   "name" : "org.apache.maven.repository.internal.DefaultVersionResolver",
   "allDeclaredConstructors" : true
 }, {
@@ -35,6 +41,21 @@
 }, {
   "name" : "org.apache.maven.settings.DefaultMavenSettingsBuilder",
   "allDeclaredFields" : true
+}, {
+  "name" : "org.apache.maven.repository.internal.DefaultModelResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.model.building.DefaultModelBuilder",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.project.ProjectModelResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.project.DefaultProjectDependenciesResolver",
+  "allDeclaredConstructors" : true
+}, {
+  "name" : "org.apache.maven.internal.aether.MavenChainedWorkspaceReader",
+  "allDeclaredConstructors" : true
 }, {
   "name" : "org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory",
   "allDeclaredConstructors" : true

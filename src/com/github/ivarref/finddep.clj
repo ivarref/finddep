@@ -6,6 +6,7 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [clojure.tools.deps :as deps]
+            [clojure.tools.deps.extensions :as ext]
             [clojure.tools.deps.tree :as tree]
             [clojure.tools.deps.util.session :as session]
             [clojure.tools.gitlibs]
@@ -264,17 +265,80 @@
       [#'clojure.tools.deps/calc-basis])
     (def dbg (runrun ["--config-project" "/home/ire/code/gh/finddep/deps.edn"]))))
 
+(def s "({:paths [\"src\"], :deps {org.eclipse.jetty/jetty-http #:mvn{:version \"9.4.48.v20220622\"}}, :aliases {:deps {:replace-paths [], :replace-deps #:org.clojure{tools.deps.cli #:mvn{:version \"0.10.55\"}}, :ns-default clojure.tools.deps.cli.api, :ns-aliases {help clojure.tools.deps.cli.help}}, :test {:extra-paths [\"test\"]}}, :mvn/repos {\"central\" {:url \"https://repo1.maven.org/maven2/\"}, \"clojars\" {:url \"https://repo.clojars.org/\"}}} {:resolve-args {}, :classpath-args {}})\n")
+
 (comment
-  (apply clojure.tools.deps/calc-basis
-         (edn/read-string "({:paths [\"src\"], :deps {org.clojure/clojure #:mvn{:version \"1.11.2\"}, com.datomic/peer #:mvn{:version \"1.0.7075\"}}, :aliases {:deps {:replace-paths [], :replace-deps #:org.clojure{tools.deps.cli #:mvn{:version \"0.10.55\"}}, :ns-default clojure.tools.deps.cli.api, :ns-aliases {help clojure.tools.deps.cli.help}}, :test {:extra-paths [\"test\"]}}, :mvn/repos {\"central\" {:url \"https://repo1.maven.org/maven2/\"}, \"clojars\" {:url \"https://repo.clojars.org/\"}}} {:resolve-args {}, :classpath-args {}})\n")))
+  (def xyz (apply clojure.tools.deps/calc-basis
+                  (edn/read-string s))))
+
+(comment
+  (ext/coord-deps 'org.eclipse.jetty/jetty-http
+                  {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+                  :mvn (edn/read-string s)))
+
+; org.eclipse.jetty/jetty-http 9.4.48.v20220622
+; org.apache.activemq/artemis-core-client 2.31.2
+
+; "nREPL-session-8a50fd58-9287-4c1a-ac28-92c0664621a8" "ext/coord-deps" :descriptor #object[org.eclipse.aether.resolution.ArtifactDescriptorResult 0x68334c49 "org.eclipse.jetty:jetty-http:jar:9.4.48.v20220622 -> [org.eclipse.jetty:jetty-util:jar:9.4.48.v20220622 (compile), org.eclipse.jetty:jetty-io:jar:9.4.48.v20220622 (compile), javax.servlet:javax.servlet-api:jar:3.1.0 (provided), org.eclipse.jetty.toolchain:jetty-test-helper:jar:5.9 (test), org.junit.jupiter:junit-jupiter:jar:5.8.2 (test)]"]
+; "main" "ext/coord-deps" :descriptor #object[org.eclipse.aether.resolution.ArtifactDescriptorResult 0x6cf6ffa6 "org.eclipse.jetty:jetty-http:jar:9.4.48.v20220622 -> [org.eclipse.jetty:jetty-util:jar:${project.version} (compile), org.eclipse.jetty:jetty-io:jar:${project.version} (compile), javax.servlet:javax.servlet-api:jar:3.1.0 (provided), org.eclipse.jetty.toolchain:jetty-test-helper:jar:5.9 (test), org.junit.jupiter:junit-jupiter:jar:5.8.2 (test)]"]
+
+
+;"nREPL-session-03ea315c-3d0e-481c-a0c6-94f89e7595c2" "ext/coord-paths" :mvn org.clojure/clojure {:mvn/version "1.11.2", :deps/manifest :mvn, :parents #{[]}}
+;"nREPL-session-03ea315c-3d0e-481c-a0c6-94f89e7595c2" "ext/coord-paths" :mvn org.eclipse.jetty/jetty-http {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn, :parents #{[]}}
+;"nREPL-session-03ea315c-3d0e-481c-a0c6-94f89e7595c2" "ext/coord-paths" :mvn org.clojure/spec.alpha {:mvn/version "0.3.218", :deps/manifest :mvn, :dependents [org.clojure/clojure], :parents #{[org.clojure/clojure]}}
+;"nREPL-session-03ea315c-3d0e-481c-a0c6-94f89e7595c2" "ext/coord-paths" :mvn org.clojure/core.specs.alpha {:mvn/version "0.2.62", :deps/manifest :mvn, :dependents [org.clojure/clojure], :parents #{[org.clojure/clojure]}}
+;"nREPL-session-03ea315c-3d0e-481c-a0c6-94f89e7595c2" "ext/coord-paths" :mvn org.eclipse.jetty/jetty-util {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn, :dependents [org.eclipse.jetty/jetty-http org.eclipse.jetty/jetty-io], :parents #{[org.eclipse.jetty/jetty-http] [org.eclipse.jetty/jetty-http org.eclipse.jetty/jetty-io]}}
+;"nREPL-session-03ea315c-3d0e-481c-a0c6-94f89e7595c2" "ext/coord-paths" :mvn org.eclipse.jetty/jetty-io {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn, :dependents [org.eclipse.jetty/jetty-http], :parents #{[org.eclipse.jetty/jetty-http]}}
+
+;"expanding deps ..."
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.clojure/clojure {:mvn/version "1.11.2", :deps/manifest :mvn}
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/canonicalize" :mvn :version "0.3.218"
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/canonicalize" :mvn :version "0.2.62"
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-http {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/canonicalize" :mvn :version "9.4.48.v20220622"
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/canonicalize" :mvn :version "9.4.48.v20220622"
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.clojure/spec.alpha {:mvn/version "0.3.218", :deps/manifest :mvn}
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.clojure/core.specs.alpha {:mvn/version "0.2.62", :deps/manifest :mvn}
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-util {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-io {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/canonicalize" :mvn :version "9.4.48.v20220622"
+;"nREPL-session-02d2f16f-713f-42e3-a732-b554d4abf2c5" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-util {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+;"done expanding deps ..."
+
+; graalvm:
+;"expanding deps ..."
+;"main" "ext/coord-deps" :mvn org.clojure/clojure {:mvn/version "1.11.2", :deps/manifest :mvn}
+;"main" "ext/canonicalize" :mvn :version "0.3.218"
+;"main" "ext/canonicalize" :mvn :version "0.2.62"
+;"main" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-http {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+;"main" "ext/canonicalize" :mvn :version "${project.version}"
+;"main" "ext/canonicalize" :mvn :version "${project.version}"
+;"main" "ext/coord-deps" :mvn org.clojure/spec.alpha {:mvn/version "0.3.218", :deps/manifest :mvn}
+;"main" "ext/coord-deps" :mvn org.clojure/core.specs.alpha {:mvn/version "0.2.62", :deps/manifest :mvn}
+;"main" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-util {:mvn/version "${project.version}", :deps/manifest :mvn}
+;"main" "ext/coord-deps" :mvn org.eclipse.jetty/jetty-io {:mvn/version "${project.version}", :deps/manifest :mvn}
+;"done expanding deps ..."
+;
+
+;"main" "ext/coord-paths" :mvn org.clojure/clojure {:mvn/version "1.11.2", :deps/manifest :mvn, :parents #{[]}}
+;"main" "ext/coord-paths" :mvn org.eclipse.jetty/jetty-http {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn, :parents #{[]}}
+;"main" "ext/coord-paths" :mvn org.clojure/spec.alpha {:mvn/version "0.3.218", :deps/manifest :mvn, :dependents [org.clojure/clojure], :parents #{[org.clojure/clojure]}}
+;"main" "ext/coord-paths" :mvn org.clojure/core.specs.alpha {:mvn/version "0.2.62", :deps/manifest :mvn, :dependents [org.clojure/clojure], :parents #{[org.clojure/clojure]}}
+;"main" "ext/coord-paths" :mvn org.eclipse.jetty/jetty-util {:mvn/version "${project.version}", :deps/manifest :mvn, :dependents [org.eclipse.jetty/jetty-http], :parents #{[org.eclipse.jetty/jetty-http]}}
+;"main" "ext/coord-paths" :mvn org.eclipse.jetty/jetty-io {:mvn/version "${project.version}", :deps/manifest :mvn, :dependents [org.eclipse.jetty/jetty-http], :parents #{[org.eclipse.jetty/jetty-http]}}
+
 (defn -main
   "Entrypoint for finddep app"
   [& args]
   (try
     #_(runrun args)
-    (prn (clojure.tools.deps.util.dir/*the-dir*))
-    (apply clojure.tools.deps/calc-basis
-           (edn/read-string "({:deps {org.clojure/clojure #:mvn{:version \"1.11.2\"}, com.datomic/peer #:mvn{:version \"1.0.7075\"}}, :mvn/repos {\"central\" {:url \"https://repo1.maven.org/maven2/\"}, \"clojars\" {:url \"https://repo.clojars.org/\"}}} {:resolve-args {}, :classpath-args {}})\n"))
+    ;(prn (clojure.tools.deps.util.dir/*the-dir*))
+    (ext/coord-deps 'org.eclipse.jetty/jetty-http
+                    {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}
+                    :mvn (edn/read-string s))
+    #_(let [lib 'org.eclipse.jetty/jetty-http
+            coord {:mvn/version "9.4.48.v20220622", :deps/manifest :mvn}]
+        (ext/coord-deps lib coord '_manifest :janei))
     (catch Throwable t
       (printerrln "Error building classpath." (.getMessage t))
       (printerrln "Ex-data:" (ex-data t))
