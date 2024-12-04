@@ -201,6 +201,6 @@
                  (throw t)))]
     (if-let [v (fz/fzf {:preview-fn (fn [selected]
                                       (with-out-str (find {:name (str selected)})))}
-                       (into [] (mapv str (sort (keys libs)))))]
+                       (into [] (mapv str (reverse (sort (keys libs))))))]
       (find {:name v})
       (println "Nothing selected, exiting"))))
