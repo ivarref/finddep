@@ -2,7 +2,7 @@
                org.clojure/tools.deps    {:mvn/version "0.19.1417"}
                org.slf4j/slf4j-nop       {:mvn/version "2.0.7"}
                clansi/clansi             {:mvn/version "1.0.0"}
-               iredebug/iredebug         {:mvn/version "0.1.0-SNAPSHOT"}
+               ;iredebug/iredebug         {:mvn/version "0.1.0-SNAPSHOT"}
                io.github.ivarref/fzf.clj {:git/sha "0632509846a18cb4780a0cec29a91cc455f9fa10"}}
  :paths       ["src"]
  :tools/usage {:ns-default com.github.ivarref.finddep}
