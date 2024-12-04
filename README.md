@@ -7,38 +7,42 @@ If so then `finddep` is for you.
 ## Installation
 
 ```
-clojure -Ttools install com.github.ivarref/finddep '{:git/tag "0.1.1" :git/sha "6c58e3e"}' :as finddep
+clojure -Ttools install com.github.ivarref/finddep '{:git/sha "ef6643d3063b1c3ea345b27004141f67f3411abe"}' :as finddep
 ```
 
 ### Optional installation
 Optionally add an alias to your shell's init file:
 ```bash
-alias finddep='clojure -Tfinddep find :name'
+alias finddep='clojure -Tfinddep fzf'
 ```
 
 ## Example usage
 
-Go to your deps-based project and invoke the tool.
-
-Here [build.edn](https://github.com/liquidz/build.edn) is used as an example.
-Let us see what introduced `slf4j-api` on the classpath:
+Go to your deps-based project and invoke the tool:
 
 ```bash
-clojure -Tfinddep find :name slf4j-api
+clojure -Tfinddep fzf
 ```
+
+Start typing to see the dependency tree for a given dependency. 
+
+For example in this project if you are wondering why `org.ow2.asm/asm` is included, you can
+type that in. And you will see this output:
 
 Output:
 ```
-slipset/deps-deploy {:mvn/version "0.2.1"}
-  org.slf4j/slf4j-nop {:mvn/version "2.0.7"}
-    org.slf4j/slf4j-api {:mvn/version "2.0.7"}
-
-# Aha, deps-deploy included slf4j-api via slf4j-nop.
+org.clojure/tools.deps {:mvn/version "0.19.1417"}
+  com.cognitect.aws/api {:mvn/version "0.8.686"}
+    org.clojure/core.async {:mvn/version "1.6.673"}
+      org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"}
+        org.ow2.asm/asm {:mvn/version "9.2"}
 ```
+
+Right, it so that's why it was included...
 
 ## License
 
-Copyright © 2023 Ivar Refsdal
+Copyright © 2023 — 2024 Ivar Refsdal
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
