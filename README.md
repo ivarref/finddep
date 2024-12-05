@@ -44,6 +44,7 @@ Right, it so that's why it was included...
 
 ```bash
 clojure -Tfinddep find name asm
+# OR: clojure -Tfinddep find :name asm
 
 org.clojure/tools.deps {:mvn/version "0.19.1417"}
   com.cognitect.aws/api {:mvn/version "0.8.686"}
