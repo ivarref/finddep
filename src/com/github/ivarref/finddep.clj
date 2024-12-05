@@ -170,9 +170,12 @@
       (println "Error. Not a tools.deps project. Missing deps.edn"))
     (System/exit 1)))
 
-(defn find [{:keys [name]}]
+(defn find [{:keys [name] :as opts}]
   (require-deps-edn!)
-  (let [libs (get-libs)
+  (let [name (if (nil? name)
+               (get opts 'name)
+               name)
+        libs (get-libs)
         needles (find-needles libs (if (or (= name :all)
                                            (= name :*))
                                      ""
