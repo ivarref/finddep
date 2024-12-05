@@ -40,6 +40,18 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
 
 Right, it so that's why it was included...
 
+## Usage with parameter search
+
+```bash
+clojure -Tfinddep find name asm
+
+org.clojure/tools.deps {:mvn/version "0.19.1417"}
+  com.cognitect.aws/api {:mvn/version "0.8.686"}
+    org.clojure/core.async {:mvn/version "1.6.673"}
+      org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"}
+        org.ow2.asm/asm {:mvn/version "9.2"}
+```
+
 ## License
 
 Copyright © 2023 — 2024 Ivar Refsdal
