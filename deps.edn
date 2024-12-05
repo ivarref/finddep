@@ -2,7 +2,7 @@
                org.clojure/tools.deps    {:mvn/version "0.19.1417"}
                org.slf4j/slf4j-nop       {:mvn/version "2.0.7"}
                clansi/clansi             {:mvn/version "1.0.0"}
-               io.github.ivarref/fzf.clj {:git/sha "0632509846a18cb4780a0cec29a91cc455f9fa10"}}
+               io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}}
  :paths       ["src"]
  :tools/usage {:ns-default com.github.ivarref.finddep}
  :aliases     {#_:build #_{:deps       {com.github.liquidz/build.edn {:mvn/version "0.10.227"}}
