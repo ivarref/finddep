@@ -63,6 +63,11 @@ io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "48c3c67f98362b
     org.clojure/java.classpath {:mvn/version "1.0.0"}
 ```
 
+## Making a new release
+
+Go to https://github.com/ivarref/finddep/actions/workflows/release.yml and press `Run workflow`.
+
+
 ## License
 
 Copyright © 2023 — 2025 Ivar Refsdal
