@@ -15,10 +15,10 @@
     (clj-commons.pretty.repl/install-pretty-exceptions)))
 
 (defn get-libs
-  ([master-edn]
+  ([aliases master-edn]
+   (assert (vector? aliases))
    (let [master-edn (merge {:mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}, "clojars" {:url "https://repo.clojars.org/"}}}
                            master-edn)
-         aliases []
          combined-aliases (deps/combine-aliases master-edn aliases)
          basis (session/with-session
                  (deps/calc-basis master-edn {:resolve-args   (merge combined-aliases {:trace true})
@@ -33,10 +33,10 @@
                                             (sorted-set))))))
        (sorted-map)
        libs)))
-  ([]
+  ([aliases]
    (let [{:keys [root-edn user-edn project-edn]} (deps/find-edn-maps "deps.edn")
          master-edn (deps/merge-edns [root-edn user-edn project-edn])]
-     (get-libs master-edn))))
+     (get-libs aliases master-edn))))
 
 (defn all-children [libs lib]
   (reduce-kv
@@ -170,12 +170,16 @@
       (println "Error. Not a tools.deps project. Missing deps.edn"))
     (System/exit 1)))
 
-(defn find [{:keys [name] :as opts}]
+(defn find [{:keys [name aliases] :as opts}]
   (require-deps-edn!)
   (let [name (if (nil? name)
                (get opts 'name)
                name)
-        libs (get-libs)
+        aliases (or (if (nil? aliases)
+                      (get opts 'aliases)
+                      aliases)
+                    [])
+        libs (get-libs aliases)
         needles (find-needles libs (if (or (= name :all)
                                            (= name :*))
                                      ""
@@ -194,10 +198,14 @@
         (doseq [[root _] roots]
           (show-tree libs root 0 false))))))
 
-(defn fzf [_]
+(defn fzf [{:keys [aliases] :as opts}]
   (require-deps-edn!)
-  (let [libs (try
-               (get-libs)
+  (let [aliases (or (if (nil? aliases)
+                      (get opts 'aliases)
+                      aliases)
+                    [])
+        libs (try
+               (get-libs aliases)
                (catch Throwable t
                  (println "Error during get-libs:")
                  (.printStackTrace t)

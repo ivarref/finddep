@@ -1,14 +1,14 @@
-{:deps        {org.clojure/clojure       {:mvn/version "1.11.2"}
-               org.clojure/tools.deps    {:mvn/version "0.19.1417"}
-               org.slf4j/slf4j-nop       {:mvn/version "2.0.7"}
-               clansi/clansi             {:mvn/version "1.0.0"}
+{:deps        {org.clojure/clojure        {:mvn/version "1.11.2"}
+               org.clojure/tools.deps     {:mvn/version "0.19.1417"}
+               org.slf4j/slf4j-nop        {:mvn/version "2.0.7"}
+               clansi/clansi              {:mvn/version "1.0.0"}
                io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}}
  :paths       ["src"]
  :tools/usage {:ns-default com.github.ivarref.finddep}
  :aliases     {#_:build #_{:deps       {com.github.liquidz/build.edn {:mvn/version "0.10.227"}}
                            :ns-default build-edn.main}
 
-               :run   {:exec-fn com.github.ivarref.finddep/entrypoint}
+               :run {:exec-fn com.github.ivarref.finddep/entrypoint}
 
                :test                                        ;; added by neil
                {:extra-paths ["test"]
