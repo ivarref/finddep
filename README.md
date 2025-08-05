@@ -11,7 +11,9 @@ clojure -Ttools install com.github.ivarref/finddep '{:git/sha "7dad611f21e459761
 ```
 
 ### Optional installation
+
 Optionally add an alias to your shell's init file:
+
 ```bash
 alias finddep='clojure -Tfinddep fzf'
 ```
@@ -24,7 +26,7 @@ Go to your deps-based project and invoke the tool:
 clojure -Tfinddep fzf
 ```
 
-Start typing to see the dependency tree for a given dependency. 
+Start typing to see the dependency tree for a given dependency.
 
 For example in this project if you are wondering why `org.ow2.asm/asm` is included, you can
 type that in. And you will see this output:
@@ -44,7 +46,6 @@ Right, it so that's why it was included...
 
 ```bash
 clojure -Tfinddep find :name asm
-# OR: clojure -Tfinddep find name asm
 
 org.clojure/tools.deps {:mvn/version "0.19.1417"}
   com.cognitect.aws/api {:mvn/version "0.8.686"}

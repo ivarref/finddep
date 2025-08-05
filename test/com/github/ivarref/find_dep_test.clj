@@ -59,37 +59,15 @@
         libs (fd/libs-with-needles libs (fd/find-needles libs ""))]
     (t/is (true? (contains? (into #{} (keys libs)) 'io.github.cognitect-labs/test-runner)))))
 
-#_(t/deftest basic
-    (let [libs (fd/get-libs {:deps {'clj-http/clj-http {:mvn/version "3.12.3"}}})
-          deps (into (sorted-set) (keys libs))]
-      (t/is (true? (contains? deps 'clj-http/clj-http)))
-      (t/is (= "riddley/riddley 0.1.12\n  potemkin/potemkin 0.4.5\n    clj-http/clj-http 3.12.3\n"
-               (with-out-str (fd/show-roots libs 0 ['riddley/riddley]))))
-      (t/is (= "riddley/riddley 0.1.12\n  potemkin/potemkin 0.4.5\n    clj-http/clj-http 3.12.3\n"
-               (with-out-str (fd/find-and-show "riddley"))))
-      (t/is (= "riddley/riddley 0.1.12\n  potemkin/potemkin 0.4.5\n    clj-http/clj-http 3.12.3\n"
-               (with-out-str (fd/find-and-show "ridd"))))
-      (t/is (= "Zero matches for abc\n"
-               (with-out-str (fd/find-and-show "abc"))))))
-
-
-#_(t/deftest height
-    (let [libs (fd/get-libs {:deps {'clj-http/clj-http {:mvn/version "3.12.3"}}})
-          deps (into (sorted-set) (keys libs))]
-      (t/is (true? (contains? deps 'clj-http/clj-http)))
-      (t/is (= "riddley/riddley 0.1.12\n  potemkin/potemkin 0.4.5\n    clj-http/clj-http 3.12.3\n"
-               (with-out-str (fd/show-roots libs 0 ['riddley/riddley]))))
-      (t/is (= "riddley/riddley 0.1.12\n  potemkin/potemkin 0.4.5\n    clj-http/clj-http 3.12.3\n"
-               (with-out-str (fd/find-and-show "riddley"))))
-      (t/is (= "riddley/riddley 0.1.12\n  potemkin/potemkin 0.4.5\n    clj-http/clj-http 3.12.3\n"
-               (with-out-str (fd/find-and-show "ridd"))))
-      (t/is (= "Zero matches for abc\n"
-               (with-out-str (fd/find-and-show "abc"))))))
-
-#_(t/deftest all-keyword
-    (with-redefs [tdio/slurp-edn (constantly {:deps {'com.github.liquidz/build.edn {:mvn/version "0.10.227"}}})]
-      (def l (fd/get-libs))
-      (let [libs (fd/get-libs)]
-        (doseq [[k v] libs]
-          (when (empty? (children libs k))
-            (println k))))))
+(t/deftest git-tag-is-nil
+  (let [libs (fd/get-libs [] {:deps {'io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}}})
+        libs (fd/libs-with-needles libs (fd/find-needles libs ""))
+        output (with-out-str
+                 (let [roots (->> libs
+                                  (filter (fn [[_k {:keys [dependents]}]]
+                                            (= dependents #{})))
+                                  (sort-by (fn [[k _]] (fd/depth libs k)))
+                                  (reverse))]
+                   (doseq [[root _] roots]
+                     (fd/show-tree libs root 0 false))))]
+    (t/is (false? (str/includes? output ":git/tag nil")))))
