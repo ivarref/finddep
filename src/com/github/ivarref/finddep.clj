@@ -125,6 +125,12 @@
     (some? (:local/root x))
     (str "{:local/root " (pr-str (get x :local/root)) "}")
 
+    (and (some? (:git/sha x))
+         (nil? (:git/tag x)))
+    (str "{:git/sha \""
+         (get x :git/sha)
+         "\"}")
+
     (some? (:git/sha x))
     (str "{:git/tag " (pr-str (get x :git/tag))
          " :git/sha \""

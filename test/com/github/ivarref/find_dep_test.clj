@@ -70,4 +70,6 @@
                                   (reverse))]
                    (doseq [[root _] roots]
                      (fd/show-tree libs root 0 false))))]
-    (t/is (false? (str/includes? output ":git/tag nil")))))
+    (t/is (false? (str/includes? output ":git/tag nil")))
+    (t/is (= (slurp "./test/output_git_tag_is_nil.txt")
+             output))))
