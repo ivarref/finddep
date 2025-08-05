@@ -187,7 +187,7 @@
       (println "Error. Not a tools.deps project. Missing deps.edn"))
     (System/exit 1)))
 
-(defn find [{:keys [name aliases indent] :as opts}]
+(defn find [{:keys [name aliases] :as opts}]
   (require-deps-edn!)
   (let [name (if (nil? name)
                (get opts 'name)
@@ -196,8 +196,8 @@
                       (get opts 'aliases)
                       aliases)
                     [])
-        indent (get-opt opts :indent 2)
-        _ (println indent)
+        include-children (get opts :include-children false)
+        ;_ (println include-children)
         libs (get-libs aliases)
         needles (find-needles libs (if (or (= name :all)
                                            (= name :*))
