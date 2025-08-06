@@ -286,7 +286,7 @@
                  (.printStackTrace t)
                  (throw t)))]
     (if-let [v (fz/fzf {:preview-fn (fn [selected]
-                                      (with-out-str (find {:name (str selected)})))}
+                                      (with-out-str (find (assoc opts :name (str selected)))))}
                        (into [] (mapv str (reverse (sort (keys libs))))))]
-      (find {:name v})
+      (find (assoc opts :name v))
       (println "Nothing selected, exiting"))))
