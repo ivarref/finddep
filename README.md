@@ -7,7 +7,7 @@ If so then `finddep` is for you.
 ## Installation
 
 ```
-clojure -Ttools install com.github.ivarref/finddep '{:git/sha "7dad611f21e45976184adadbccd7cd7bcf6c1916"}' :as finddep
+clojure -Ttools install com.github.ivarref/finddep '{:git/tag "0.1.44" :git/sha "e4e4e663145587c35c6cf4563fc98fe1282e3484"}' :as finddep
 ```
 
 ### Optional installation
