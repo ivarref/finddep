@@ -64,7 +64,7 @@ io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "48c3c67f98362b
     org.clojure/java.classpath {:mvn/version "1.0.0"}
 ```
 
-## Usage with `include-children`
+## Usage with include-children
 
 ```bash
 clojure -Tfinddep find :name tools.analyzer.jvm :include-children true
@@ -81,6 +81,13 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
         org.clojure/tools.reader {:mvn/version "1.3.6"}
         org.ow2.asm/asm {:mvn/version "9.2"}
 ```
+
+### Making a new release
+
+```bash
+./release.py
+```
+
 
 ## License
 
