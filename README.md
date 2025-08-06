@@ -18,7 +18,7 @@ Optionally add an alias to your shell's init file:
 alias finddep='clojure -Tfinddep fzf'
 ```
 
-## Example usage
+## Usage with fzf
 
 Go to your deps-based project and invoke the tool:
 
@@ -54,7 +54,7 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
         org.ow2.asm/asm {:mvn/version "9.2"}
 ```
 
-### Usage with aliases
+## Usage with aliases
 
 ```bash
 clojure -Tfinddep find :name java.classpath :aliases '[:test]'
@@ -62,6 +62,24 @@ clojure -Tfinddep find :name java.classpath :aliases '[:test]'
 io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "48c3c67f98362ba1e20526db4eeb6996209c050a"}
   org.clojure/tools.namespace {:mvn/version "1.1.0"}
     org.clojure/java.classpath {:mvn/version "1.0.0"}
+```
+
+## Usage with `include-children`
+
+```bash
+clojure -Tfinddep find :name tools.analyzer.jvm :include-children true
+
+org.clojure/tools.deps {:mvn/version "0.19.1417"}
+  com.cognitect.aws/api {:mvn/version "0.8.686"}
+    org.clojure/core.async {:mvn/version "1.6.673"}
+      org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"}
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        org.clojure/core.memoize {:mvn/version "1.0.253"}
+          org.clojure/core.cache {:mvn/version "1.0.225"}
+            org.clojure/data.priority-map {:mvn/version "1.1.0"}
+        org.clojure/tools.analyzer {:mvn/version "1.1.0"}
+        org.clojure/tools.reader {:mvn/version "1.3.6"}
+        org.ow2.asm/asm {:mvn/version "9.2"}
 ```
 
 ## License
