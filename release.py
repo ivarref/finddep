@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import subprocess
 import traceback
+import sys
 
 LINE_PREFIX_TO_PATCH = 'clojure -Ttools install com.github.ivarref/finddep'
 LINE_POSTFIX = ':as finddep'
-RELASE_MAJOR_MINOR_STR = "0.1"
+RELEASE_MAJOR_MINOR_STR = "0.1"
 
 def log_error(m):
     print(m, flush=True)
@@ -90,8 +91,8 @@ def do_release():
                     else:
                         git_commit_count = git_commit_count.strip()
                         print(f"git commit count is '{git_commit_count}'")
-                        global RELASE_MAJOR_MINOR_STR
-                        release_tag = f'{RELASE_MAJOR_MINOR_STR}.{git_commit_count}'
+                        global RELEASE_MAJOR_MINOR_STR
+                        release_tag = f'{RELEASE_MAJOR_MINOR_STR}.{git_commit_count}'
                         print(f"Releasing tag '{release_tag}'")
                         new_lines = []
                         found = False
@@ -116,35 +117,39 @@ def do_release():
                             print('Did not find line to patch in README.md. Aborting!')
                             return False
                         else:
-                            with open('README.md', 'w', encoding='utf-8') as fd:
-                                fd.write('\n'.join(new_lines))
-                                fd.write('\n')
-                            print('Updated README.md')
-                            if False == exec_verbose(['git', 'add', 'README.md']):
-                                print('Failed to git add README.md')
+                            if '--dry' in sys.argv:
+                                print('Dry mode, exiting!')
                                 return False
                             else:
-                                print('git add README.md OK')
-                                cmd = ['git', 'commit', '-m', f"Release {release_tag}"]
-                                if False == exec_verbose(cmd):
-                                    print('Failed to git commit. Aborting!')
+                                with open('README.md', 'w', encoding='utf-8') as fd:
+                                    fd.write('\n'.join(new_lines))
+                                    fd.write('\n')
+                                print('Updated README.md')
+                                if False == exec_verbose(['git', 'add', 'README.md']):
+                                    print('Failed to git add README.md')
                                     return False
                                 else:
-                                    print("OK commit: " + " ".join(cmd))
-                                    cmd = ['git', 'tag', '-a', f"{release_tag}", '-m', f"Release {release_tag}"]
+                                    print('git add README.md OK')
+                                    cmd = ['git', 'commit', '-m', f"Release {release_tag}"]
                                     if False == exec_verbose(cmd):
-                                        print('Failed to git tag. Aborting!')
+                                        print('Failed to git commit. Aborting!')
                                         return False
                                     else:
-                                        print("OK tag: " + " ".join(cmd))
-                                        cmd = ['git', 'push', '--follow-tags']
+                                        print("OK commit: " + " ".join(cmd))
+                                        cmd = ['git', 'tag', '-a', f"{release_tag}", '-m', f"Release {release_tag}"]
                                         if False == exec_verbose(cmd):
-                                            print('Failed to git push. Aborting!')
+                                            print('Failed to git tag. Aborting!')
                                             return False
                                         else:
-                                            print("OK push: " + " ".join(cmd))
-                                            print(f"Released tag {release_tag} with sha {git_sha}")
-                                            return True
+                                            print("OK tag: " + " ".join(cmd))
+                                            cmd = ['git', 'push', '--follow-tags']
+                                            if False == exec_verbose(cmd):
+                                                print('Failed to git push. Aborting!')
+                                                return False
+                                            else:
+                                                print("OK push: " + " ".join(cmd))
+                                                print(f"Released tag {release_tag} with sha {git_sha}")
+                                                return True
     raise RuntimeError('Should not get here')
 
 if __name__ == "__main__":
