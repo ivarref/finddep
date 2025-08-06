@@ -8,3 +8,4 @@ classes/
 pom.xml
 finddep
 .clj-kondo/
+rel.py
