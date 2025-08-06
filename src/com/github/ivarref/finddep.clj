@@ -97,6 +97,15 @@
              (sorted-set)
              libs))
 
+(defn find-needles2 [libs sym]
+  (reduce-kv (fn [o k _]
+               (if (str/includes? (str k) (str sym))
+                 (set/union (conj o k)
+                            (all-children libs k))
+                 o))
+             (sorted-set)
+             libs))
+
 (defn depth [libs lib]
   (+ 1 (reduce
          max
@@ -136,6 +145,37 @@
          " :git/sha \""
          (get x :git/sha)
          "\"}")))
+
+(defn show-tree2 [libs root needles indent seen?]
+  (let [lib (get libs root)
+        is-needle? (some (fn [x] (= x root))
+                         needles)]
+    (println (str (str/join "" (repeat (* 2 indent) " "))
+                  root
+                  " "
+                  (version-str lib)))
+    (when is-needle?
+      (println (str (str/join "" (repeat (* 2 indent) " "))
+                    (str/join "" (repeat (count (str root
+                                                     " "
+                                                     (version-str lib)))
+                                         "^"))))))
+  (let [children (->> libs
+                      (filter (fn [[_k {:keys [dependents]}]]
+                                (contains? dependents root)))
+                      (sort-by (fn [[k _]] (str k)))
+                      #_(reverse))]
+    (doseq [[idx [k _]] (map-indexed vector children)]
+      (let [previous-seen (->> (take idx (map first children))
+                               (reduce
+                                 (fn [o v]
+                                   (into o (all-children libs v)))
+                                 #{}))
+            seen? (if (true? seen?)
+                    true
+                    (contains? previous-seen k))]
+        (when (false? seen?)
+          (show-tree2 libs k needles (inc indent) seen?))))))
 
 (defn show-tree [libs root indent seen?]
   (let [lib (get libs root)]
@@ -187,35 +227,54 @@
       (println "Error. Not a tools.deps project. Missing deps.edn"))
     (System/exit 1)))
 
-(defn find [{:keys [name aliases] :as opts}]
+(defn find-with-children [libs name]
+  (let [needles (find-needles libs name)
+        needles-with-children (find-needles2 libs name)
+        libs (libs-with-needles libs needles-with-children)]
+    (let [roots (->> libs
+                     (filter (fn [[_k {:keys [dependents]}]]
+                               (= dependents #{})))
+                     (sort-by (fn [[k _]] (depth libs k)))
+                     (reverse))]
+      (doseq [[root _] roots]
+        (show-tree2 libs root needles 0 false)))))
+
+(defn find [{:keys [name aliases libs force-exit?] :as opts}]
   (require-deps-edn!)
   (let [name (if (nil? name)
                (get opts 'name)
                name)
+        force-exit? (if (nil? force-exit?)
+                      true
+                      false)
         aliases (or (if (nil? aliases)
                       (get opts 'aliases)
                       aliases)
                     [])
-        include-children (get opts :include-children false)
-        ;_ (println include-children)
-        libs (get-libs aliases)
+        include-children (or (get-opt opts :include-children false)
+                             (get-opt opts :include-children? false))
+        libs (or libs (get-libs aliases))
         needles (find-needles libs (if (or (= name :all)
                                            (= name :*))
                                      ""
-                                     name))
-        libs (libs-with-needles libs needles)]
+                                     name))]
     (if (= needles #{})
       (binding [*out* *err*]
         (println (str "No matches found for '" name "'."))
         (println "Was is a typo?")
-        (System/exit 1))
-      (let [roots (->> libs
-                       (filter (fn [[_k {:keys [dependents]}]]
-                                 (= dependents #{})))
-                       (sort-by (fn [[k _]] (depth libs k)))
-                       (reverse))]
-        (doseq [[root _] roots]
-          (show-tree libs root 0 false))))))
+        (if force-exit?
+          (System/exit 1)
+          nil))
+      (if include-children
+        (find-with-children libs name)
+        (let [libs (libs-with-needles libs needles)
+              roots (->> libs
+                         (filter (fn [[_k {:keys [dependents]}]]
+                                   (= dependents #{})))
+                         (sort-by (fn [[k _]] (depth libs k)))
+                         (reverse))]
+          (doseq [[root _] roots]
+            (show-tree libs root 0 false)))))))
 
 (defn fzf [{:keys [aliases] :as opts}]
   (require-deps-edn!)

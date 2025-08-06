@@ -34,33 +34,36 @@
         (fd/show-tree libs root 0 false)))))
 
 (t/deftest can-print-git-tag
-  (let [libs (fd/get-libs [] {:deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}})
-        libs (fd/libs-with-needles libs (fd/find-needles libs ""))]
+  (let [libs (fd/get-libs [] {:deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}})]
     (t/is (= (slurp "test/output_git_tag.txt")
-             (get-output libs)))))
+             (with-out-str (fd/find {:name "" :libs libs}))))))
 
 (t/deftest can-print-local-root
-  (let [libs (fd/get-libs [] {:deps {'local/root {:local/root (.getAbsolutePath (jio/file "."))}}})
-        libs (fd/libs-with-needles libs (fd/find-needles libs ""))]
-    (t/is (= (slurp "test/local_root.txt")
-             (get-output libs)))))
+  (t/is (= (slurp "test/local_root.txt")
+           (with-out-str
+             (fd/find
+               {:name ""
+                :libs (fd/get-libs [] {:deps {'local/root {:local/root (.getAbsolutePath (jio/file "."))}}})})))))
 
 (t/deftest alias-support-1
-  (let [libs (fd/get-libs [] {:deps {'org.slf4j/slf4j-nop {:mvn/version "2.0.7"}}
-                              :aliases {:test {:extra-deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}}}})
-        libs (fd/libs-with-needles libs (fd/find-needles libs ""))]
-    (t/is (= (slurp "test/no_alias.txt")
-             (get-output libs)))))
+  (t/is (= (slurp "test/no_alias.txt")
+           (with-out-str
+             (fd/find
+               {:name ""
+                :libs (fd/get-libs [] {:deps    {'org.slf4j/slf4j-nop {:mvn/version "2.0.7"}}
+                                       :aliases {:test {:extra-deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}}}})})))))
 
 (t/deftest alias-support-2
-  (let [libs (fd/get-libs [:test] {:deps {'org.slf4j/slf4j-nop {:mvn/version "2.0.7"}}
-                                   :aliases {:test {:extra-deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}}}})
-        libs (fd/libs-with-needles libs (fd/find-needles libs ""))]
-    (t/is (= (slurp "test/alias.txt")
-             (get-output libs)))))
+  (t/is (= (slurp "test/alias.txt")
+           (with-out-str
+             (fd/find
+               {:name ""
+                :libs (fd/get-libs [:test] {:deps    {'org.slf4j/slf4j-nop {:mvn/version "2.0.7"}}
+                                            :aliases {:test {:extra-deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}}}})})))))
 
 (t/deftest git-tag-is-nil
-  (let [libs (fd/get-libs [] {:deps {'io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}}})
-        libs (fd/libs-with-needles libs (fd/find-needles libs ""))]
-    (t/is (= (slurp "test/output_git_tag_is_nil.txt")
-             (get-output libs)))))
+  (t/is (= (slurp "test/output_git_tag_is_nil.txt")
+           (with-out-str
+             (fd/find
+               {:name ""
+                :libs (fd/get-libs [] {:deps {'io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}}})})))))
