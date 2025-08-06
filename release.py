@@ -156,10 +156,13 @@ if __name__ == "__main__":
     print("Releasing ...")
     try:
         ret = do_release()
-        if ret:
-            print("Releasing ... Done")
+        if '--dry' in sys.argv:
+            pass
         else:
-            print("Releasing ... Failed!")
+            if ret:
+                print("Releasing ... Done")
+            else:
+                print("Releasing ... Failed!")
     except Exception as e:
         traceback.print_exc()
         print("Releasing ... Fatal error!")
