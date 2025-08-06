@@ -86,6 +86,7 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
 
 ```bash
 ./release.py
+# or "./release.py --dry" if you want to see the changes about to be made
 ```
 
 
