@@ -188,8 +188,7 @@
   (let [children (->> libs
                       (filter (fn [[_k {:keys [dependents]}]]
                                 (contains? dependents root)))
-                      (sort-by (fn [[k _]] (depth libs k)))
-                      (reverse))]
+                      (sort-by (fn [[k _]] (str k))))]
     (doseq [[idx [k _]] (map-indexed vector children)]
       (let [previous-seen (->> (take idx (map first children))
                                (reduce
@@ -234,8 +233,7 @@
     (let [roots (->> libs
                      (filter (fn [[_k {:keys [dependents]}]]
                                (= dependents #{})))
-                     (sort-by (fn [[k _]] (depth libs k)))
-                     (reverse))]
+                     (sort-by (fn [[k _]] (str k))))]
       (doseq [[root _] roots]
         (show-tree2 libs root needles 0 false)))))
 
@@ -271,8 +269,7 @@
               roots (->> libs
                          (filter (fn [[_k {:keys [dependents]}]]
                                    (= dependents #{})))
-                         (sort-by (fn [[k _]] (depth libs k)))
-                         (reverse))]
+                         (sort-by (fn [[k _]] (str k))))]
           (doseq [[root _] roots]
             (show-tree libs root 0 false)))))))
 

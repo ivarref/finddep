@@ -23,15 +23,11 @@
       (t/is (= 4 (fd/depth libs 'com.amazonaws/aws-java-sdk-s3)))
       (t/is (= 5 (fd/depth libs 's3-wagon-private/s3-wagon-private))))))
 
-(defn get-output [libs]
-  (with-out-str
-    (let [roots (->> libs
-                     (filter (fn [[_k {:keys [dependents]}]]
-                               (= dependents #{})))
-                     (sort-by (fn [[k _]] (fd/depth libs k)))
-                     (reverse))]
-      (doseq [[root _] roots]
-        (fd/show-tree libs root 0 false)))))
+(defn spit2 [f s]
+  (when (not= (slurp f)
+              s)
+    (spit f s))
+  s)
 
 (t/deftest can-print-git-tag
   (let [libs (fd/get-libs [] {:deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}})]

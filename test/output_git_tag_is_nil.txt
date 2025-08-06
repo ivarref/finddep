@@ -1,6 +1,6 @@
 io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}
-  org.clojure/clojure {:mvn/version "1.11.2"}
-    org.clojure/spec.alpha {:mvn/version "0.3.218"}
-    org.clojure/core.specs.alpha {:mvn/version "0.2.62"}
-  babashka/process {:mvn/version "0.4.16"}
   babashka/fs {:mvn/version "0.4.19"}
+  babashka/process {:mvn/version "0.4.16"}
+  org.clojure/clojure {:mvn/version "1.11.2"}
+    org.clojure/core.specs.alpha {:mvn/version "0.2.62"}
+    org.clojure/spec.alpha {:mvn/version "0.3.218"}

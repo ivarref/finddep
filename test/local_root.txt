@@ -1,86 +1,108 @@
 local/root {:local/root "/Users/ire/code/finddep"}
+  clansi/clansi {:mvn/version "1.0.0"}
+  io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}
+    babashka/fs {:mvn/version "0.4.19"}
+    babashka/process {:mvn/version "0.4.16"}
+    org.clojure/clojure {:mvn/version "1.11.2"}
+      org.clojure/core.specs.alpha {:mvn/version "0.2.62"}
+      org.clojure/spec.alpha {:mvn/version "0.3.218"}
   org.clojure/tools.deps {:mvn/version "0.19.1417"}
     com.cognitect.aws/api {:mvn/version "0.8.686"}
+      com.cognitect/http-client {:mvn/version "1.0.125"}
       org.clojure/core.async {:mvn/version "1.6.673"}
         org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"}
           org.clojure/core.memoize {:mvn/version "1.0.253"}
             org.clojure/core.cache {:mvn/version "1.0.225"}
               org.clojure/data.priority-map {:mvn/version "1.1.0"}
-          org.ow2.asm/asm {:mvn/version "9.2"}
-          org.clojure/tools.reader {:mvn/version "1.3.6"}
           org.clojure/tools.analyzer {:mvn/version "1.1.0"}
-      org.clojure/tools.logging {:mvn/version "1.2.4"}
+          org.clojure/tools.reader {:mvn/version "1.3.6"}
+          org.ow2.asm/asm {:mvn/version "9.2"}
       org.clojure/data.json {:mvn/version "2.4.0"}
-      com.cognitect/http-client {:mvn/version "1.0.125"}
+      org.clojure/tools.logging {:mvn/version "1.2.4"}
+    com.cognitect.aws/endpoints {:mvn/version "1.1.12.626"}
+    com.cognitect.aws/s3 {:mvn/version "848.2.1413.0"}
+    javax.inject/javax.inject {:mvn/version "1"}
+    org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+    org.apache.maven.resolver/maven-resolver-connector-basic {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-util {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+    org.apache.maven.resolver/maven-resolver-impl {:mvn/version "1.8.2"}
+      javax.annotation/javax.annotation-api {:mvn/version "1.3.2"}
+      org.apache.commons/commons-lang3 {:mvn/version "3.12.0"}
+      org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-named-locks {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-util {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+    org.apache.maven.resolver/maven-resolver-transport-file {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+    org.apache.maven.resolver/maven-resolver-transport-http {:mvn/version "1.8.2"}
+      org.apache.httpcomponents/httpclient {:mvn/version "4.5.13"}
+        commons-codec/commons-codec {:mvn/version "1.11"}
+      org.apache.httpcomponents/httpcore {:mvn/version "4.4.15"}
+      org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.apache.maven.resolver/maven-resolver-util {:mvn/version "1.8.2"}
+        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
+      org.slf4j/jcl-over-slf4j {:mvn/version "1.7.36"}
     org.apache.maven/maven-core {:mvn/version "3.8.8"}
+      com.google.inject/guice$no_aop {:mvn/version "4.2.2"}
+        aopalliance/aopalliance {:mvn/version "1.0"}
+        javax.inject/javax.inject {:mvn/version "1"}
+      org.apache.maven.shared/maven-shared-utils {:mvn/version "3.3.4"}
+      org.apache.maven/maven-artifact {:mvn/version "3.8.8"}
+      org.apache.maven/maven-builder-support {:mvn/version "3.8.8"}
+      org.apache.maven/maven-model {:mvn/version "3.8.8"}
+      org.apache.maven/maven-model-builder {:mvn/version "3.8.8"}
+        javax.inject/javax.inject {:mvn/version "1"}
+        org.apache.maven/maven-artifact {:mvn/version "3.8.8"}
+        org.apache.maven/maven-builder-support {:mvn/version "3.8.8"}
+        org.apache.maven/maven-model {:mvn/version "3.8.8"}
+        org.codehaus.plexus/plexus-interpolation {:mvn/version "1.26"}
+        org.eclipse.sisu/org.eclipse.sisu.inject {:mvn/version "0.3.5"}
+      org.apache.maven/maven-plugin-api {:mvn/version "3.8.8"}
+        org.apache.maven/maven-artifact {:mvn/version "3.8.8"}
+        org.apache.maven/maven-model {:mvn/version "3.8.8"}
+        org.codehaus.plexus/plexus-classworlds {:mvn/version "2.6.0"}
+        org.eclipse.sisu/org.eclipse.sisu.plexus {:mvn/version "0.3.5"}
+          org.eclipse.sisu/org.eclipse.sisu.inject {:mvn/version "0.3.5"}
+      org.apache.maven/maven-repository-metadata {:mvn/version "3.8.8"}
+      org.apache.maven/maven-resolver-provider {:mvn/version "3.8.8"}
+        javax.inject/javax.inject {:mvn/version "1"}
+        org.apache.maven/maven-model {:mvn/version "3.8.8"}
+        org.apache.maven/maven-model-builder {:mvn/version "3.8.8"}
+          javax.inject/javax.inject {:mvn/version "1"}
+          org.apache.maven/maven-artifact {:mvn/version "3.8.8"}
+          org.apache.maven/maven-builder-support {:mvn/version "3.8.8"}
+          org.apache.maven/maven-model {:mvn/version "3.8.8"}
+          org.codehaus.plexus/plexus-interpolation {:mvn/version "1.26"}
+          org.eclipse.sisu/org.eclipse.sisu.inject {:mvn/version "0.3.5"}
+        org.apache.maven/maven-repository-metadata {:mvn/version "3.8.8"}
+      org.apache.maven/maven-settings {:mvn/version "3.8.8"}
       org.apache.maven/maven-settings-builder {:mvn/version "3.8.8"}
+        javax.inject/javax.inject {:mvn/version "1"}
+        org.apache.maven/maven-builder-support {:mvn/version "3.8.8"}
+        org.apache.maven/maven-settings {:mvn/version "3.8.8"}
+        org.codehaus.plexus/plexus-interpolation {:mvn/version "1.26"}
         org.codehaus.plexus/plexus-sec-dispatcher {:mvn/version "2.0"}
+          javax.inject/javax.inject {:mvn/version "1"}
           org.codehaus.plexus/plexus-cipher {:mvn/version "2.0"}
             javax.inject/javax.inject {:mvn/version "1"}
           org.codehaus.plexus/plexus-utils {:mvn/version "3.4.1"}
-        org.codehaus.plexus/plexus-interpolation {:mvn/version "1.26"}
-        org.apache.maven/maven-settings {:mvn/version "3.8.8"}
-        org.apache.maven/maven-builder-support {:mvn/version "3.8.8"}
-      org.apache.maven/maven-resolver-provider {:mvn/version "3.8.8"}
-        org.apache.maven/maven-model-builder {:mvn/version "3.8.8"}
-          org.eclipse.sisu/org.eclipse.sisu.inject {:mvn/version "0.3.5"}
-          org.codehaus.plexus/plexus-interpolation {:mvn/version "1.26"}
-          org.apache.maven/maven-model {:mvn/version "3.8.8"}
-          org.apache.maven/maven-builder-support {:mvn/version "3.8.8"}
-          org.apache.maven/maven-artifact {:mvn/version "3.8.8"}
-          javax.inject/javax.inject {:mvn/version "1"}
-        org.apache.maven/maven-repository-metadata {:mvn/version "3.8.8"}
-      org.apache.maven/maven-plugin-api {:mvn/version "3.8.8"}
-        org.eclipse.sisu/org.eclipse.sisu.plexus {:mvn/version "0.3.5"}
-          org.eclipse.sisu/org.eclipse.sisu.inject {:mvn/version "0.3.5"}
-        org.codehaus.plexus/plexus-classworlds {:mvn/version "2.6.0"}
-        org.apache.maven/maven-model {:mvn/version "3.8.8"}
-        org.apache.maven/maven-artifact {:mvn/version "3.8.8"}
-      com.google.inject/guice$no_aop {:mvn/version "4.2.2"}
-        javax.inject/javax.inject {:mvn/version "1"}
-        aopalliance/aopalliance {:mvn/version "1.0"}
       org.codehaus.plexus/plexus-component-annotations {:mvn/version "2.1.0"}
-      org.apache.maven.shared/maven-shared-utils {:mvn/version "3.3.4"}
+    org.clojure/data.xml {:mvn/version "0.2.0-alpha9"}
+    org.clojure/tools.cli {:mvn/version "1.1.230"}
+    org.clojure/tools.gitlibs {:mvn/version "2.5.197"}
     org.eclipse.jetty/jetty-client {:mvn/version "9.4.53.v20231009"}
       org.eclipse.jetty/jetty-http {:mvn/version "9.4.53.v20231009"}
         org.eclipse.jetty/jetty-io {:mvn/version "9.4.53.v20231009"}
           org.eclipse.jetty/jetty-util {:mvn/version "9.4.53.v20231009"}
-    org.apache.maven.resolver/maven-resolver-transport-http {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-util {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-      org.apache.httpcomponents/httpclient {:mvn/version "4.5.13"}
-        commons-codec/commons-codec {:mvn/version "1.11"}
-      org.slf4j/jcl-over-slf4j {:mvn/version "1.7.36"}
-      org.apache.httpcomponents/httpcore {:mvn/version "4.4.15"}
-    org.apache.maven.resolver/maven-resolver-transport-file {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-    org.apache.maven.resolver/maven-resolver-impl {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-util {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-named-locks {:mvn/version "1.8.2"}
-      org.apache.commons/commons-lang3 {:mvn/version "3.12.0"}
-      javax.annotation/javax.annotation-api {:mvn/version "1.3.2"}
-    org.apache.maven.resolver/maven-resolver-connector-basic {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-util {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-      org.apache.maven.resolver/maven-resolver-spi {:mvn/version "1.8.2"}
-        org.apache.maven.resolver/maven-resolver-api {:mvn/version "1.8.2"}
-    org.clojure/tools.gitlibs {:mvn/version "2.5.197"}
-    org.clojure/tools.cli {:mvn/version "1.1.230"}
-    org.clojure/data.xml {:mvn/version "0.2.0-alpha9"}
-    com.cognitect.aws/s3 {:mvn/version "848.2.1413.0"}
-    com.cognitect.aws/endpoints {:mvn/version "1.1.12.626"}
-  io.github.joakimen/fzf.clj {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}
-    org.clojure/clojure {:mvn/version "1.11.2"}
-      org.clojure/spec.alpha {:mvn/version "0.3.218"}
-      org.clojure/core.specs.alpha {:mvn/version "0.2.62"}
-    babashka/process {:mvn/version "0.4.16"}
-    babashka/fs {:mvn/version "0.4.19"}
   org.slf4j/slf4j-nop {:mvn/version "2.0.7"}
     org.slf4j/slf4j-api {:mvn/version "2.0.7"}
-  clansi/clansi {:mvn/version "1.0.0"}
