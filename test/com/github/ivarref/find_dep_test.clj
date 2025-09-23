@@ -1,6 +1,8 @@
 (ns com.github.ivarref.find-dep-test
   (:require [clj-commons.pretty.repl]
+            [clojure.java.io :as io]
             [clojure.java.io :as jio]
+            [clojure.string :as str]
             [clojure.test :as t]
             [com.github.ivarref.finddep :as fd]))
 
@@ -34,8 +36,14 @@
     (t/is (= (slurp "test/output_git_tag.txt")
              (with-out-str (fd/find {:name "" :libs libs}))))))
 
+(defn local-root-content []
+  (let [s (slurp "test/local_root.txt")]
+    (str/replace s
+                 "/Users/ire/code/finddep"
+                 (.getAbsolutePath (.getParentFile (.getAbsoluteFile (io/file ".")))))))
+
 (t/deftest can-print-local-root
-  (t/is (= (slurp "test/local_root.txt")
+  (t/is (= (local-root-content)
            (with-out-str
              (fd/find
                {:name ""
