@@ -93,63 +93,70 @@ def do_release():
                         print(f"git commit count is '{git_commit_count}'")
                         global RELEASE_MAJOR_MINOR_STR
                         release_tag = f'{RELEASE_MAJOR_MINOR_STR}.{git_commit_count}'
-                        print(f"Releasing tag '{release_tag}'")
-                        new_lines = []
-                        found = False
-                        with open('README.md', 'r', encoding='utf-8') as fd:
-                            for lin in fd.readlines():
-                                lin = lin.rstrip('\n')
-                                global LINE_PREFIX_TO_PATCH
-                                global LINE_POSTFIX
-                                if lin.startswith(LINE_PREFIX_TO_PATCH):
-                                    print(f"Patching line:\n{lin}")
-                                    new_line = '''
-                                    $PREFIX '{:git/tag "$TAG" :git/sha "$SHA"}' $POSTFIX
-                                    '''.replace('$PREFIX', LINE_PREFIX_TO_PATCH).replace('$TAG', release_tag).replace('$SHA', git_sha).replace('$POSTFIX', LINE_POSTFIX)
-                                    new_line = new_line.strip()
-                                    print(f"{new_line}")
-                                    print(f"^^^ patched line")
-                                    found = True
-                                    new_lines.append(new_line)
-                                else:
-                                    new_lines.append(lin)
-                        if False == found:
-                            print('Did not find line to patch in README.md. Aborting!')
+                        print(f"Releasing tag '{release_tag}' ...")
+                        cmd = ['git', 'tag', '-a', f"{release_tag}", '-m', f"Release {release_tag}"]
+                        if False == exec_verbose(cmd):
+                            print('Failed to git tag. Aborting!')
                             return False
                         else:
-                            if '--dry' in sys.argv:
-                                print('Dry mode, exiting!')
+                            print("OK tag: " + " ".join(cmd))
+                            cmd = ['git', 'push', '--follow-tags']
+                            if False == exec_verbose(cmd):
+                                print('Failed to git push. Aborting!')
                                 return False
                             else:
-                                with open('README.md', 'w', encoding='utf-8') as fd:
-                                    fd.write('\n'.join(new_lines))
-                                    fd.write('\n')
-                                print('Updated README.md')
-                                if False == exec_verbose(['git', 'add', 'README.md']):
-                                    print('Failed to git add README.md')
+                                print("OK push: " + " ".join(cmd))
+                                print(f"Pushed tag {release_tag} with sha {git_sha}")
+                                print(f"Updating README.md ...")
+                                new_lines = []
+                                found = False
+                                with open('README.md', 'r', encoding='utf-8') as fd:
+                                    for lin in fd.readlines():
+                                        lin = lin.rstrip('\n')
+                                        global LINE_PREFIX_TO_PATCH
+                                        global LINE_POSTFIX
+                                        if lin.startswith(LINE_PREFIX_TO_PATCH):
+                                            print(f"Patching line:\n{lin}")
+                                            new_line = '''
+                                            $PREFIX '{:git/tag "$TAG" :git/sha "$SHA"}' $POSTFIX
+                                            '''.replace('$PREFIX', LINE_PREFIX_TO_PATCH).replace('$TAG', release_tag).replace('$SHA', git_sha).replace('$POSTFIX', LINE_POSTFIX)
+                                            new_line = new_line.strip()
+                                            print(f"{new_line}")
+                                            print(f"^^^ patched line")
+                                            found = True
+                                            new_lines.append(new_line)
+                                        else:
+                                            new_lines.append(lin)
+                                if False == found:
+                                    print('Did not find line to patch in README.md. Aborting!')
                                     return False
                                 else:
-                                    print('git add README.md OK')
-                                    cmd = ['git', 'commit', '-m', f"Release {release_tag}"]
-                                    if False == exec_verbose(cmd):
-                                        print('Failed to git commit. Aborting!')
+                                    if '--dry' in sys.argv:
+                                        print('Dry mode, exiting!')
                                         return False
                                     else:
-                                        print("OK commit: " + " ".join(cmd))
-                                        cmd = ['git', 'tag', '-a', f"{release_tag}", '-m', f"Release {release_tag}"]
-                                        if False == exec_verbose(cmd):
-                                            print('Failed to git tag. Aborting!')
+                                        with open('README.md', 'w', encoding='utf-8') as fd:
+                                            fd.write('\n'.join(new_lines))
+                                            fd.write('\n')
+                                        print('Updated README.md')
+                                        if False == exec_verbose(['git', 'add', 'README.md']):
+                                            print('Failed to git add README.md')
                                             return False
                                         else:
-                                            print("OK tag: " + " ".join(cmd))
-                                            cmd = ['git', 'push', '--follow-tags']
+                                            print('git add README.md OK')
+                                            cmd = ['git', 'commit', '-m', f"Update README.md for {release_tag}"]
                                             if False == exec_verbose(cmd):
-                                                print('Failed to git push. Aborting!')
+                                                print('Failed to git commit. Aborting!')
                                                 return False
                                             else:
-                                                print("OK push: " + " ".join(cmd))
-                                                print(f"Released tag {release_tag} with sha {git_sha}")
-                                                return True
+                                                print("OK commit: " + " ".join(cmd))
+                                                cmd = ['git', 'push']
+                                                if False == exec_verbose(cmd):
+                                                    print('Failed to git push. Aborting!')
+                                                    return False
+                                                else:
+                                                    print("OK push: " + " ".join(cmd))
+                                                    return True
     raise RuntimeError('Should not get here')
 
 if __name__ == "__main__":
