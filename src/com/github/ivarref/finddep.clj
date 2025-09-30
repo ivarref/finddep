@@ -28,7 +28,8 @@
 (defn get-libs
   ([aliases master-edn]
    (assert (vector? aliases))
-   (let [master-edn (merge {:mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}, "clojars" {:url "https://repo.clojars.org/"}}}
+   (let [master-edn (merge {:mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
+                                        "clojars" {:url "https://repo.clojars.org/"}}}
                            master-edn)
          combined-aliases (deps/combine-aliases master-edn aliases)
          basis (session/with-session
@@ -214,7 +215,8 @@
         (show-tree libs root 0 false)))))
 
 (comment
-  (let [libs (get-libs {:deps {'io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}})
+  (let [libs (get-libs {:deps {'io.github.cognitect-labs/test-runner
+                               {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}})
         libs (libs-with-needles libs (find-needles libs ""))]
     (doseq [[root {:keys [dependents]}] libs]
       (when (= #{} dependents)
