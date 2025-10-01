@@ -1,11 +1,11 @@
 (ns com.github.ivarref.finddep
   (:refer-clojure :exclude [find])
-  (:require [clojure.java.io :as jio]
-            [clojure.set :as set]
+  (:require [clojure.set :as set]
             [clojure.string :as str]
             [clojure.tools.deps :as deps]
             [clojure.tools.deps.util.session :as session]
             [clojure.tools.gitlibs]
+            [com.github.ivarref.finddep-utils :as utils]
             [clojure.tools.deps.extensions.git]
             [fzf.core :as fz]))
 
@@ -13,14 +13,6 @@
   (do
     (require '[clj-commons.pretty.repl])
     (clj-commons.pretty.repl/install-pretty-exceptions)))
-
-(defn get-opt [opts kw default]
-  (assert (map? opts))
-  (assert (keyword? kw))
-  (or
-    (get opts kw)
-    (get opts (symbol kw))
-    default))
 
 (comment
   (get-opt {'janei 123} :janei 999))
@@ -222,12 +214,6 @@
       (when (= #{} dependents)
         (show-tree libs root 0 false)))))
 
-(defn require-deps-edn! []
-  (when (not (.exists (jio/file "deps.edn")))
-    (binding [*out* *err*]
-      (println "Error. Not a tools.deps project. Missing deps.edn"))
-    (System/exit 1)))
-
 (defn find-with-children [libs name]
   (let [needles (find-needles libs name)
         needles-with-children (find-needles2 libs name)
@@ -240,7 +226,7 @@
         (show-tree2 libs root needles 0 false)))))
 
 (defn find [{:keys [name aliases libs force-exit?] :as opts}]
-  (require-deps-edn!)
+  (utils/require-deps-edn!)
   (let [name (if (nil? name)
                (get opts 'name)
                name)
@@ -251,8 +237,8 @@
                       (get opts 'aliases)
                       aliases)
                     [])
-        include-children (or (get-opt opts :include-children false)
-                             (get-opt opts :include-children? false))
+        include-children (or (utils/get-opt opts :include-children false)
+                             (utils/get-opt opts :include-children? false))
         libs (or libs (get-libs aliases))
         needles (find-needles libs (if (or (= name :all)
                                            (= name :*))
@@ -276,7 +262,7 @@
             (show-tree libs root 0 false)))))))
 
 (defn fzf [{:keys [aliases] :as opts}]
-  (require-deps-edn!)
+  (utils/require-deps-edn!)
   (let [aliases (or (if (nil? aliases)
                       (get opts 'aliases)
                       aliases)

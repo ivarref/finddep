@@ -12,10 +12,29 @@ clojure -Ttools install com.github.ivarref/finddep '{:git/tag "0.1.60" :git/sha 
 
 ### Optional installation
 
-Optionally add an alias to your shell's init file:
+If you are only going to use the `:name` parameter search (see next section), you can
+also do the following:
 
 ```bash
-alias finddep='clojure -Tfinddep fzf'
+echo -e '#!/usr/bin/env bash\nclojure -Tfinddep find :name "$@"' > \
+$HOME/.local/bin/finddep && chmod +x $HOME/.local/bin/finddep
+```
+
+## Usage with `:name` parameter search
+
+Go to your deps-based project and invoke the tool.
+
+For example in this project if you are wondering why `org.ow2.asm/asm` is included, you can
+do the following:
+
+```bash
+clojure -Tfinddep find :name asm
+
+org.clojure/tools.deps {:mvn/version "0.19.1417"}
+  com.cognitect.aws/api {:mvn/version "0.8.686"}
+    org.clojure/core.async {:mvn/version "1.6.673"}
+      org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"}
+        org.ow2.asm/asm {:mvn/version "9.2"}
 ```
 
 ## Usage with fzf
@@ -28,10 +47,8 @@ clojure -Tfinddep fzf
 
 Start typing to see the dependency tree for a given dependency.
 
-For example in this project if you are wondering why `org.ow2.asm/asm` is included, you can
-type that in. And you will see this output:
-
 Output:
+
 ```
 org.clojure/tools.deps {:mvn/version "0.19.1417"}
   com.cognitect.aws/api {:mvn/version "0.8.686"}
@@ -42,17 +59,7 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
 
 Right, it so that's why it was included...
 
-## Usage with parameter search
 
-```bash
-clojure -Tfinddep find :name asm
-
-org.clojure/tools.deps {:mvn/version "0.19.1417"}
-  com.cognitect.aws/api {:mvn/version "0.8.686"}
-    org.clojure/core.async {:mvn/version "1.6.673"}
-      org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"}
-        org.ow2.asm/asm {:mvn/version "9.2"}
-```
 
 ## Usage with aliases
 
