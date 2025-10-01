@@ -16,6 +16,29 @@
         (System/exit 1))
       res)))
 
+(defn get-opts [opts kws default]
+  (assert (map? opts))
+  (assert (vector kws))
+  (let [res (reduce
+              (fn [o kw]
+                (assert (keyword? kw))
+                (let [res (or
+                            (get opts kw)
+                            (get opts (name kw))
+                            (get opts (symbol kw))
+                            ::missing)]
+                  (if (= res ::missing)
+                    o
+                    (reduced res))))
+              default
+              kws)]
+    (if (and (= res :exit)
+             (= default :exit))
+      (binding [*out* *err*]
+        (println (str "ERROR: You must specify one of keywords: " (str kws)))
+        (System/exit 1))
+      res)))
+
 (defn require-deps-edn! []
   (when (not (.exists (jio/file "deps.edn")))
     (binding [*out* *err*]

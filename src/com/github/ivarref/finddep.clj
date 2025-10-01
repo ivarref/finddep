@@ -6,6 +6,7 @@
             [clojure.tools.deps.util.session :as session]
             [clojure.tools.gitlibs]
             [com.github.ivarref.finddep-utils :as utils]
+            [com.github.ivarref.finddep2 :as finddep2]
             [clojure.tools.deps.extensions.git]
             [fzf.core :as fz]))
 
@@ -227,39 +228,42 @@
 
 (defn find [{:keys [name aliases libs force-exit?] :as opts}]
   (utils/require-deps-edn!)
-  (let [name (if (nil? name)
-               (get opts 'name)
-               name)
-        force-exit? (if (nil? force-exit?)
-                      true
-                      false)
-        aliases (or (if (nil? aliases)
-                      (get opts 'aliases)
-                      aliases)
-                    [])
-        include-children (or (utils/get-opt opts :include-children false)
-                             (utils/get-opt opts :include-children? false))
-        libs (or libs (get-libs aliases))
-        needles (find-needles libs (if (or (= name :all)
-                                           (= name :*))
-                                     ""
-                                     name))]
-    (if (= needles #{})
-      (binding [*out* *err*]
-        (println (str "No matches found for '" name "'."))
-        (println "Was is a typo?")
-        (if force-exit?
-          (System/exit 1)
-          nil))
-      (if include-children
-        (find-with-children libs name)
-        (let [libs (libs-with-needles libs needles)
-              roots (->> libs
-                         (filter (fn [[_k {:keys [dependents]}]]
-                                   (= dependents #{})))
-                         (sort-by (fn [[k _]] (str k))))]
-          (doseq [[root _] roots]
-            (show-tree libs root 0 false)))))))
+  (if
+    (true? (utils/get-opts opts [:full :verbose] false))
+    (finddep2/find2 opts)
+    (let [name (if (nil? name)
+                 (get opts 'name)
+                 name)
+          force-exit? (if (nil? force-exit?)
+                        true
+                        false)
+          aliases (or (if (nil? aliases)
+                        (get opts 'aliases)
+                        aliases)
+                      [])
+          include-children (or (utils/get-opt opts :include-children false)
+                               (utils/get-opt opts :include-children? false))
+          libs (or libs (get-libs aliases))
+          needles (find-needles libs (if (or (= name :all)
+                                             (= name :*))
+                                       ""
+                                       name))]
+      (if (= needles #{})
+        (binding [*out* *err*]
+          (println (str "No matches found for '" name "'."))
+          (println "Was is a typo?")
+          (if force-exit?
+            (System/exit 1)
+            nil))
+        (if include-children
+          (find-with-children libs name)
+          (let [libs (libs-with-needles libs needles)
+                roots (->> libs
+                           (filter (fn [[_k {:keys [dependents]}]]
+                                     (= dependents #{})))
+                           (sort-by (fn [[k _]] (str k))))]
+            (doseq [[root _] roots]
+              (show-tree libs root 0 false))))))))
 
 (defn fzf [{:keys [aliases] :as opts}]
   (utils/require-deps-edn!)
