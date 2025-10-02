@@ -43,10 +43,11 @@
      (get-lib-tree aliases master-edn))))
 
 (defn- print-node
-  [{:keys [lib coord include reason]} indented {:keys [match-name color hide-libs]}]
+  [{:keys [lib coord include reason]} indented {:keys [excluded match-name color hide-libs]}]
   (assert (string? match-name)
           (str "Expected match-name to be string, was: " (pr-str (type match-name))))
   (assert (boolean? color))
+  (assert (boolean? excluded))
   (when (and lib (or (= reason :new-top-dep) (not (contains? hide-libs lib))))
     (let [pre (space indented)
           summary (ext/coord-summary lib coord)
@@ -64,12 +65,18 @@
                 :newer-version
                 (colorize (str pre ". " summary " " reason) :green)
 
-                (:use-top :older-version :excluded :parent-omitted :superseded) ;; :superseded is internal here
+                :excluded
+                (if excluded
+                  (colorize (str pre "X " summary " " reason) :yellow)
+                  nil)
+
+                (:use-top :older-version :parent-omitted :superseded) ;; :superseded is internal here
                 (colorize (str pre "X " summary " " reason) :yellow)
 
                 ;; fallthrough, unknown reason
                 (colorize (str pre "? " summary include reason) :red))]
-      (println lin))))
+      (when (string? lin)
+        (println lin)))))
 
 (defn has-child? [tree needle-set]
   (assert (set? needle-set))
@@ -101,6 +108,7 @@
   (utils/require-deps-edn!)
   (let [nam (str (utils/get-opt opts :name :exit))
         color (utils/get-opt opts :color true)
+        excluded (utils/get-opt opts :show-excluded true)
         libs (or libs (get-lib-tree (utils/get-opt opts :aliases [])))
         needles (->> (tree-seq :children
                                (fn [nod] (vals (:children nod)))
@@ -115,4 +123,4 @@
         (println "Was is a typo?")
         (System/exit 1))
       (do
-        (print-tree libs needles {:color color :match-name nam})))))
+        (print-tree libs needles {:excluded excluded :color color :match-name nam})))))
