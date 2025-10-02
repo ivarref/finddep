@@ -8,11 +8,7 @@ LINE_POSTFIX = ':as finddep'
 
 def mod_line(line, tag, sha):
     if line.starts_with("'{:git/tag "):
-        return "'{:git/tag " \
-                + f'"{tag}" :git/sha' \
-                + f'"{sha}"' \
-                + "}' \\"
-                f"'\{:git/tag \"{tag}}\" :git/sha \"{725a07b76cb871c578486f41610846231c457258}\"\}' \\"
+        return "'{:git/tag " + f'"{tag}" :git/sha ' + f'"{sha}"' + "}' \\"
     else:
         return line
 
