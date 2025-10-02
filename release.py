@@ -5,6 +5,17 @@ import sys
 
 LINE_PREFIX_TO_PATCH = 'clojure -Ttools install com.github.ivarref/finddep'
 LINE_POSTFIX = ':as finddep'
+
+def mod_line(line, tag, sha):
+    if line.starts_with("'{:git/tag "):
+        return "'{:git/tag " \
+                + f'"{tag}" :git/sha' \
+                + f'"{sha}"' \
+                + "}' \\"
+                f"'\{:git/tag \"{tag}}\" :git/sha \"{725a07b76cb871c578486f41610846231c457258}\"\}' \\"
+    else:
+        return line
+
 RELEASE_MAJOR_MINOR_STR = "0.1"
 
 def log_error(m):
@@ -113,14 +124,9 @@ def do_release():
                                 with open('README.md', 'r', encoding='utf-8') as fd:
                                     for lin in fd.readlines():
                                         lin = lin.rstrip('\n')
-                                        global LINE_PREFIX_TO_PATCH
-                                        global LINE_POSTFIX
-                                        if lin.startswith(LINE_PREFIX_TO_PATCH):
+                                        new_line = mod_line(lin, release_tag, git_sha)
+                                        if new_line != lin:
                                             print(f"Patching line:\n{lin}")
-                                            new_line = '''
-                                            $PREFIX '{:git/tag "$TAG" :git/sha "$SHA"}' $POSTFIX
-                                            '''.replace('$PREFIX', LINE_PREFIX_TO_PATCH).replace('$TAG', release_tag).replace('$SHA', git_sha).replace('$POSTFIX', LINE_POSTFIX)
-                                            new_line = new_line.strip()
                                             print(f"{new_line}")
                                             print(f"^^^ patched line")
                                             found = True
