@@ -1,0 +1,16 @@
+com.datomic/peer 1.0.7075
+  . com.datomic/memcache-asg-java-client 1.1.0.36
+    . com.amazonaws/aws-java-sdk-ec2 1.11.22
+      . com.amazonaws/aws-java-sdk-core 1.11.22
+        X com.fasterxml.jackson.core/jackson-databind 2.6.6 :older-version
+yada/yada 1.2.15
+  . yada/swagger 1.2.15
+    . metosin/ring-swagger 0.26.0
+      . metosin/scjsv 0.4.1
+        . com.github.java-json-tools/json-schema-validator 2.2.8
+          . com.github.java-json-tools/json-schema-core 1.2.8
+            . com.github.fge/jackson-coreutils 1.8
+              X com.fasterxml.jackson.core/jackson-databind 2.2.3 :older-version
+  . yada/webjars 1.2.15
+    . org.webjars/webjars-locator 0.34
+      . com.fasterxml.jackson.core/jackson-databind 2.9.4

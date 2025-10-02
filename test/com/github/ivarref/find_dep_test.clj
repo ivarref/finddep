@@ -4,7 +4,8 @@
             [clojure.java.io :as jio]
             [clojure.string :as str]
             [clojure.test :as t]
-            [com.github.ivarref.finddep :as fd]))
+            [com.github.ivarref.finddep :as fd]
+            [com.github.ivarref.finddep2 :as fd2]))
 
 (clj-commons.pretty.repl/install-pretty-exceptions)
 
@@ -85,3 +86,28 @@
                         []
                         {:deps {'io.github.joakimen/fzf.clj
                                 {:git/sha "2063e0f6e1a7f78b5869ef1424e04e21ec46e1eb"}}})})))))
+
+(t/deftest full-find-1
+  (let [expected (str/trim (slurp "test/full-find-1.txt"))
+        deps {'yada/yada        {:mvn/version "1.2.15"}
+              'com.datomic/peer {:mvn/version "1.0.7075"
+                                 :exclusions  []}}]
+    (t/is (= expected
+             (str/trim
+               (with-out-str
+                 (fd2/find2 {:name  "databind"
+                             :color false
+                             :libs  (fd2/get-lib-tree [] {:deps deps})})))))))
+
+
+(t/deftest full-find-2
+  (let [expected (str/trim (slurp "test/full-find-2.txt"))
+        deps {'yada/yada        {:mvn/version "1.2.15"}
+              'com.datomic/peer {:mvn/version "1.0.7075"
+                                 :exclusions  ['com.datomic/memcache-asg-java-client]}}]
+    (t/is (= expected
+             (str/trim
+               (with-out-str
+                 (fd2/find2 {:name  "databind"
+                             :color false
+                             :libs  (fd2/get-lib-tree [] {:deps deps})})))))))

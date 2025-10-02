@@ -1,8 +1,21 @@
+;   Copyright (c) Rich Hickey. All rights reserved.
+;   The use and distribution terms for this software are covered by the
+;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;   which can be found in the file epl-v10.html at the root of this distribution.
+;   By using this software in any fashion, you are agreeing to be bound by
+;   the terms of this license.
+;   You must not remove this notice, or any other, from this software.
+;
+; Most of the code here is from:
+; https://github.com/clojure/tools.deps/blob/f6837cc4c7af4d470915115b4afb3cf3540600ad/src/main/clojure/clojure/tools/deps/tree.clj
+
 (ns com.github.ivarref.finddep2
-  (:require [clojure.string :as str]
+  (:require [clojure.set :as set]
+            [clojure.string :as str]
             [clojure.tools.deps :as deps]
             [clojure.tools.deps.extensions :as ext]
             [clojure.tools.deps.tree :as deps-tree]
+            [clansi :as clansi]
             [clojure.tools.deps.util.session :as session]
             [com.github.ivarref.finddep-utils :as utils]))
 
@@ -30,34 +43,44 @@
      (get-lib-tree aliases master-edn))))
 
 (defn- print-node
-  [{:keys [lib coord include reason]} indented {:keys [hide-libs]}]
+  [{:keys [lib coord include reason]} indented {:keys [match-name color hide-libs]}]
+  (assert (string? match-name)
+          (str "Expected match-name to be string, was: " (pr-str (type match-name))))
+  (assert (boolean? color))
   (when (and lib (or (= reason :new-top-dep) (not (contains? hide-libs lib))))
     (let [pre (space indented)
-          summary (ext/coord-summary lib coord)]
-      (println
-        (case reason
-          :new-top-dep
-          (str pre summary)
+          summary (ext/coord-summary lib coord)
+          colorize (fn [what with-color]
+                     (if color
+                       (str/replace what match-name (clansi/style match-name with-color))
+                       what))
+          lin (case reason
+                :new-top-dep
+                (colorize (str pre summary) :green)
 
-          (:new-dep :same-version)
-          (str pre ". " summary)
+                (:new-dep :same-version)
+                (colorize (str pre ". " summary) :green)
 
-          :newer-version
-          (str pre ". " summary " " reason)
+                :newer-version
+                (colorize (str pre ". " summary " " reason) :green)
 
-          (:use-top :older-version :excluded :parent-omitted :superseded) ;; :superseded is internal here
-          (str pre "X " summary " " reason)
+                (:use-top :older-version :excluded :parent-omitted :superseded) ;; :superseded is internal here
+                (colorize (str pre "X " summary " " reason) :yellow)
 
-          ;; fallthrough, unknown reason
-          (str pre "? " summary include reason))))))
+                ;; fallthrough, unknown reason
+                (colorize (str pre "? " summary include reason) :red))]
+      (println lin))))
 
-(defn has-child? [{:keys [children] :as libs} needle-set]
+(defn has-child? [tree needle-set]
   (assert (set? needle-set))
-  (if (nil? children)
-    false
-    (if (some (fn [needle-child] (contains? children needle-child)) needle-set)
-      true
-      (some (fn [child] (has-child? child needle-set)) children))))
+  (->> (tree-seq :children
+                 (fn [nod] (vals (:children nod)))
+                 tree)
+       (mapv :lib)
+       (distinct)
+       (into (sorted-set))
+       (set/intersection needle-set)
+       (not= #{})))
 
 (defn print-tree
   "Print the tree to the console.
@@ -70,15 +93,17 @@
    (let [opts' (merge {:indent 2, :hide-libs '#{org.clojure/clojure}} opts)]
      (when (or (has-child? tree needle-set)
                (contains? needle-set lib))
-       (print-node tree indented opts'))
-     (doseq [child (sort-by :step (vals children))]
-       (print-tree child needle-set (+ indented (:indent opts')) opts')))))
+       (print-node tree indented opts')
+       (doseq [child (sort-by :lib (vals children))]
+         (print-tree child needle-set (+ indented (:indent opts')) opts'))))))
 
-(defn find2 [{:keys [force-exit?] :as opts}]
+(defn find2 [{:keys [libs force-exit?] :as opts}]
   (utils/require-deps-edn!)
-  (let [nam (utils/get-opt opts :name :exit)
-        libs (get-lib-tree (utils/get-opt opts :aliases []))
-        needles (->> (tree-seq :children (fn [nod] (vals (:children nod)))
+  (let [nam (str (utils/get-opt opts :name :exit))
+        color (utils/get-opt opts :color true)
+        libs (or libs (get-lib-tree (utils/get-opt opts :aliases [])))
+        needles (->> (tree-seq :children
+                               (fn [nod] (vals (:children nod)))
                                libs)
                      (mapv :lib)
                      (filter #(str/includes? (str %) (str nam)))
@@ -89,4 +114,5 @@
         (println (str "No matches found for '" nam "'."))
         (println "Was is a typo?")
         (System/exit 1))
-      (print-tree libs needles {}))))
+      (do
+        (print-tree libs needles {:color color :match-name nam})))))

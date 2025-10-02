@@ -4,11 +4,17 @@
 (defn get-opt [opts kw default]
   (assert (map? opts))
   (assert (keyword? kw))
-  (let [res (or
-              (get opts kw)
-              (get opts (name kw))
-              (get opts (symbol kw))
-              default)]
+  (let [res (cond (contains? opts kw)
+                  (get opts kw)
+
+                  (contains? opts (name kw))
+                  (get opts (name kw))
+
+                  (contains? opts (symbol kw))
+                  (get opts (symbol kw))
+
+                  :else
+                  default)]
     (if (and (= res :exit)
              (= default :exit))
       (binding [*out* *err*]
