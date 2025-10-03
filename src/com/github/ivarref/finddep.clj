@@ -251,7 +251,7 @@
       (if (= needles #{})
         (binding [*out* *err*]
           (println (str "No matches found for '" name "'."))
-          (println "Was is a typo?")
+          (println "Was it a typo?")
           (if force-exit?
             (System/exit 1)
             nil))

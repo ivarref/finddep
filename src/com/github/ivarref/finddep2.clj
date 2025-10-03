@@ -43,7 +43,8 @@
      (get-lib-tree aliases master-edn))))
 
 (defn- print-node
-  [{:keys [lib coord include reason]} indented {:keys [excluded match-name color hide-libs]}]
+  [{:keys [lib coord include reason]} indented
+   {:keys [not-version excluded match-name color hide-libs]}]
   (assert (string? match-name)
           (str "Expected match-name to be string, was: " (pr-str (type match-name))))
   (assert (boolean? color))
@@ -57,24 +58,30 @@
                        what))
           lin (case reason
                 :new-top-dep
-                (colorize (str pre summary) :green)
+                (colorize (str pre summary) :cyan)
 
                 (:new-dep :same-version)
-                (colorize (str pre ". " summary) :green)
+                (colorize (str pre ". " summary) :cyan)
 
                 :newer-version
-                (colorize (str pre ". " summary " " reason) :green)
+                (colorize (str pre ". " summary " " reason) :cyan)
 
                 :excluded
                 (if excluded
                   (colorize (str pre "X " summary " " reason) :yellow)
                   nil)
 
-                (:use-top :older-version :parent-omitted :superseded) ;; :superseded is internal here
+                ;; :superseded is internal here
+                (:use-top :older-version :parent-omitted :superseded)
                 (colorize (str pre "X " summary " " reason) :yellow)
 
                 ;; fallthrough, unknown reason
-                (colorize (str pre "? " summary include reason) :red))]
+                (colorize (str pre "? " summary include reason) :red))
+          lin (if (and (some? not-version)
+                       (= :mvn (ext/coord-type coord))
+                       (= not-version (:mvn/version coord)))
+                nil
+                lin)]
       (when (string? lin)
         (println lin)))))
 
@@ -109,7 +116,16 @@
   (let [nam (str (utils/get-opt opts :name :exit))
         color (utils/get-opt opts :color true)
         excluded (utils/get-opt opts :show-excluded true)
+        focus (utils/get-opt opts :focus nil)
+        not-version (utils/get-opt opts :not-version nil)
         libs (or libs (get-lib-tree (utils/get-opt opts :aliases [])))
+        libs (if (nil? focus)
+               libs
+               (->> (tree-seq :children
+                              (fn [nod] (vals (:children nod)))
+                              libs)
+                    (filter #(str/includes? (str (:lib %)) (str focus)))
+                    (first)))
         needles (->> (tree-seq :children
                                (fn [nod] (vals (:children nod)))
                                libs)
@@ -120,7 +136,9 @@
     (if (= #{} needles)
       (binding [*out* *err*]
         (println (str "No matches found for '" nam "'."))
-        (println "Was is a typo?")
+        (println "Was it a typo?")
         (System/exit 1))
       (do
-        (print-tree libs needles {:excluded excluded :color color :match-name nam})))))
+        (print-tree libs
+                    needles
+                    {:not-version not-version :excluded excluded :color color :match-name nam})))))
