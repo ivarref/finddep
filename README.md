@@ -8,7 +8,7 @@ If so then `finddep` is for you.
 
 ```
 clojure -Ttools install com.github.ivarref/finddep \
-'{:git/tag "0.1.71" :git/sha "35f6118465cb0aff1d2bdcbb903f3525c183b983"}' \
+'{:git/tag "0.1.73" :git/sha "f6faa87b4941bd818d7da3107ec0d555798908a3"}' \
 :as finddep
 ```
 
