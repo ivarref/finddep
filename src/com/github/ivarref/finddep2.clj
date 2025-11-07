@@ -111,7 +111,27 @@
        (doseq [child (sort-by :lib (vals children))]
          (print-tree child needle-set include-children? (+ indented (:indent opts')) opts'))))))
 
-(defn find2 [{:keys [include-children? full? libs] :as opts}]
+(defn print-tree-include-children
+  "Print the tree to the console.
+   Options:
+     :indent    Indent spacing (default = 2)
+     :hide-libs Set of libs to ignore as deps under top deps, default = #{org.clojure/clojure}"
+  ([tree needle-set {:keys [indent] :or {indent 2} :as opts}]
+   (print-tree-include-children tree needle-set false (- 0 indent) opts))
+  ([{:keys [children lib] :as tree} needle-set include-children? indented opts]
+   (let [opts' (merge {:indent 2, :hide-libs '#{org.clojure/clojure}} opts)]
+     (if (or (has-child? tree needle-set)
+             (contains? needle-set lib)
+             include-children?)
+       (do
+         (print-node tree indented opts')
+         (doseq [child (sort-by :lib (vals children))]
+           (print-tree-include-children child needle-set
+                                        (or include-children? (contains? needle-set lib))
+                                        (+ indented (:indent opts')) opts')))
+       nil))))
+
+(defn find2 [{:keys [include-children? libs] :as opts}]
   (utils/require-deps-edn!)
   (let [nam (str (utils/get-opt opts :name :exit))
         color (utils/get-opt opts :color true)
@@ -139,7 +159,12 @@
         (println "Was it a typo?")
         (System/exit 1))
       (do
-        (print-tree libs
-                    needles
-                    include-children?
-                    {:not-version not-version :excluded excluded :color color :match-name nam})))))
+        (if include-children?
+          (print-tree-include-children
+            libs
+            needles
+            {:not-version not-version :excluded excluded :color color :match-name nam})
+          (print-tree libs
+                      needles
+                      include-children?
+                      {:not-version not-version :excluded excluded :color color :match-name nam}))))))
