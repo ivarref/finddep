@@ -7,6 +7,7 @@
             [clojure.tools.gitlibs]
             [com.github.ivarref.finddep-utils :as utils]
             [com.github.ivarref.finddep2 :as finddep2]
+            [com.github.ivarref.finddep-distinct :as finddep-distinct]
             [clojure.tools.deps.extensions.git]
             [fzf.core :as fz]))
 
@@ -228,9 +229,17 @@
 
 (defn find [{:keys [name aliases libs force-exit?] :as opts}]
   (utils/require-deps-edn!)
-  (if
-    (true? (utils/get-opts opts [:full :verbose] false))
-    (finddep2/find2 opts)
+  (cond
+    (true? (utils/get-opts opts [:distinct :distinct?] false))
+    (finddep-distinct/find2 opts)
+
+    (true? (utils/get-opts opts [:full? :full :verbose] false))
+    (finddep2/find2
+      (assoc opts
+        :full? (utils/get-opts opts [:full? :full :verbose] false)
+        :include-children? (utils/get-opts opts [:include-children :include-children?] false)))
+
+    :else
     (let [name (if (nil? name)
                  (get opts 'name)
                  name)

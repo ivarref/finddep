@@ -1,21 +1,9 @@
-;   Copyright (c) Rich Hickey. All rights reserved.
-;   The use and distribution terms for this software are covered by the
-;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
-;   which can be found in the file epl-v10.html at the root of this distribution.
-;   By using this software in any fashion, you are agreeing to be bound by
-;   the terms of this license.
-;   You must not remove this notice, or any other, from this software.
-;
-; Most of the code here is from:
-; https://github.com/clojure/tools.deps/blob/f6837cc4c7af4d470915115b4afb3cf3540600ad/src/main/clojure/clojure/tools/deps/tree.clj
-
-(ns com.github.ivarref.finddep2
+(ns com.github.ivarref.finddep-distinct
   (:require [clojure.set :as set]
             [clojure.string :as str]
             [clojure.tools.deps :as deps]
             [clojure.tools.deps.extensions :as ext]
             [clojure.tools.deps.tree :as deps-tree]
-            [clansi :as clansi]
             [clojure.tools.deps.util.session :as session]
             [com.github.ivarref.finddep-utils :as utils]))
 
@@ -42,6 +30,8 @@
          master-edn (deps/merge-edns [root-edn user-edn project-edn])]
      (get-lib-tree aliases master-edn))))
 
+(def lines (atom (sorted-set)))
+
 (defn- print-node
   [{:keys [lib coord include reason]} indented
    {:keys [not-version excluded match-name color hide-libs]}]
@@ -50,7 +40,7 @@
   (assert (boolean? color))
   (assert (boolean? excluded))
   (when (and lib (or (= reason :new-top-dep) (not (contains? hide-libs lib))))
-    (let [pre (space indented)
+    (let [pre "" #_(space indented)
           summary (ext/coord-summary lib coord)
           colorize (fn [what with-color]
                      (if color
@@ -83,7 +73,7 @@
                 nil
                 lin)]
       (when (string? lin)
-        (println lin)))))
+        (swap! lines conj lin)))))
 
 (defn has-child? [tree needle-set]
   (assert (set? needle-set))
@@ -101,17 +91,17 @@
    Options:
      :indent    Indent spacing (default = 2)
      :hide-libs Set of libs to ignore as deps under top deps, default = #{org.clojure/clojure}"
-  ([tree needle-set include-children? {:keys [indent] :or {indent 2} :as opts}]
-   (print-tree tree needle-set include-children? (- 0 indent) opts))
-  ([{:keys [children lib] :as tree} needle-set include-children? indented opts]
+  ([tree needle-set {:keys [indent] :or {indent 2} :as opts}]
+   (print-tree tree needle-set (- 0 indent) opts))
+  ([{:keys [children lib] :as tree} needle-set indented opts]
    (let [opts' (merge {:indent 2, :hide-libs '#{org.clojure/clojure}} opts)]
      (when (or (has-child? tree needle-set)
                (contains? needle-set lib))
        (print-node tree indented opts')
        (doseq [child (sort-by :lib (vals children))]
-         (print-tree child needle-set include-children? (+ indented (:indent opts')) opts'))))))
+         (print-tree child needle-set (+ indented (:indent opts')) opts'))))))
 
-(defn find2 [{:keys [include-children? full? libs] :as opts}]
+(defn find2 [{:keys [libs] :as opts}]
   (utils/require-deps-edn!)
   (let [nam (str (utils/get-opt opts :name :exit))
         color (utils/get-opt opts :color true)
@@ -141,5 +131,6 @@
       (do
         (print-tree libs
                     needles
-                    include-children?
-                    {:not-version not-version :excluded excluded :color color :match-name nam})))))
+                    {:not-version not-version :excluded excluded :color color :match-name nam})
+        (doseq [lin @lines]
+          (println lin))))))
