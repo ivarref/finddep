@@ -19,26 +19,87 @@
 (comment
   (get-opt {'janei 123} :janei 999))
 
+(defn get-alias-type [deps-edn alias]
+  (if-let [alias' (get-in deps-edn [:aliases alias])]
+    (when (map? alias')
+      (cond (contains? alias' :extra-deps)
+            :extra-deps
+
+            (contains? alias' :deps)
+            :deps
+
+            (contains? alias' :replace-deps)
+            :replace-deps
+
+            :else
+            nil))
+    nil))
+
+(defn standalone-deps [deps-edn alias]
+  (if-let [alias' (get-in deps-edn [:aliases alias])]
+    (when (map? alias')
+      (cond (contains? alias' :deps)
+            (get alias' :deps)
+
+            (contains? alias' :replace-deps)
+            (get alias' :replace-deps)
+
+            :else
+            nil))
+    nil))
+
+
 (defn get-libs
   ([aliases master-edn]
    (assert (vector? aliases))
-   (let [master-edn (merge {:mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
-                                        "clojars" {:url "https://repo.clojars.org/"}}}
-                           master-edn)
-         combined-aliases (deps/combine-aliases master-edn aliases)
-         basis (session/with-session
-                 (deps/calc-basis master-edn {:resolve-args   (merge combined-aliases {:trace true})
-                                              :classpath-args combined-aliases}))
-         libs (:libs basis)]
-     (reduce-kv
-       (fn [o k v]
-         (assoc o k
-                  (update v :dependents (fn [old]
-                                          (if (not-empty old)
-                                            (into (sorted-set) old)
-                                            (sorted-set))))))
-       (sorted-map)
-       libs)))
+   (let [standalone-deps' (atom [])
+         extra-alias (atom [])]
+     (doseq [alias aliases]
+       (when (= :extra-deps (get-alias-type master-edn alias))
+         (swap! extra-alias conj alias))
+       (when-let [standalone-dep (standalone-deps master-edn alias)]
+         (swap! standalone-deps' conj standalone-dep)))
+     (if (> (count @standalone-deps') 1)
+       (throw (ex-info "Must only specify a single standalone deps alias" {}))
+       (if (= (count @standalone-deps') 0)
+         (let [master-edn' (merge {:mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
+                                               "clojars" {:url "https://repo.clojars.org/"}}}
+                                  master-edn)
+               combined-aliases (deps/combine-aliases master-edn' @extra-alias)
+               basis (session/with-session
+                       (deps/calc-basis master-edn' {:resolve-args   (merge combined-aliases {:trace true})
+                                                     :classpath-args combined-aliases}))
+               libs (:libs basis)
+               libs' (reduce-kv
+                       (fn [o k v]
+                         (assoc o k
+                                  (update v :dependents (fn [old]
+                                                          (if (not-empty old)
+                                                            (into (sorted-set) old)
+                                                            (sorted-set))))))
+                       (sorted-map)
+                       libs)]
+           libs')
+         (do
+           (assert (= 1 (count @standalone-deps')))
+           (let [master-edn'' (merge {:mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
+                                                  "clojars" {:url "https://repo.clojars.org/"}}}
+                                     (assoc master-edn :deps (first @standalone-deps')))
+                 combined-aliases' (deps/combine-aliases master-edn'' [])
+                 basis' (session/with-session
+                          (deps/calc-basis master-edn'' {:resolve-args   (merge combined-aliases' {:trace true})
+                                                         :classpath-args combined-aliases'}))
+                 libs'' (:libs basis')
+                 libs''' (reduce-kv
+                           (fn [o k v]
+                             (assoc o k
+                                      (update v :dependents (fn [old]
+                                                              (if (not-empty old)
+                                                                (into (sorted-set) old)
+                                                                (sorted-set))))))
+                           (sorted-map)
+                           libs'')]
+             libs'''))))))
   ([aliases]
    (let [{:keys [root-edn user-edn project-edn]} (deps/find-edn-maps "deps.edn")
          master-edn (deps/merge-edns [root-edn user-edn project-edn])]
