@@ -73,6 +73,16 @@ io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "48c3c67f98362b
     org.clojure/java.classpath {:mvn/version "1.0.0"}
 ```
 
+### Use all aliases
+
+```bash
+clojure -Tfinddep find :name java.classpath :aliases ':all'
+
+io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "48c3c67f98362ba1e20526db4eeb6996209c050a"}
+  org.clojure/tools.namespace {:mvn/version "1.1.0"}
+    org.clojure/java.classpath {:mvn/version "1.0.0"}
+```
+
 ## Usage with include-children
 
 ```bash

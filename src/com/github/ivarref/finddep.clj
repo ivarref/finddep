@@ -307,9 +307,10 @@
           force-exit? (if (nil? force-exit?)
                         true
                         false)
-          aliases (or (if (nil? aliases)
-                        (get opts 'aliases)
-                        aliases)
+          aliases (or (utils/expand-aliases
+                        (if (nil? aliases)
+                          (get opts 'aliases)
+                          aliases))
                       [])
           include-children (or (utils/get-opt opts :include-children false)
                                (utils/get-opt opts :include-children? false))
@@ -337,9 +338,10 @@
 
 (defn fzf [{:keys [aliases] :as opts}]
   (utils/require-deps-edn!)
-  (let [aliases (or (if (nil? aliases)
-                      (get opts 'aliases)
-                      aliases)
+  (let [aliases (or (utils/expand-aliases
+                      (if (nil? aliases)
+                        (get opts 'aliases)
+                        aliases))
                     [])
         libs (try
                (get-libs aliases)

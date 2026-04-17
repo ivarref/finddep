@@ -138,7 +138,8 @@
         excluded (utils/get-opt opts :show-excluded true)
         focus (utils/get-opt opts :focus nil)
         not-version (utils/get-opt opts :not-version nil)
-        libs (or libs (get-lib-tree (utils/get-opt opts :aliases [])))
+        libs (or libs (get-lib-tree
+                        (utils/expand-aliases (utils/get-opt opts :aliases []))))
         libs (if (nil? focus)
                libs
                (->> (tree-seq :children
