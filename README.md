@@ -22,7 +22,11 @@ bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
 if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
-  printf "\e[0;31m%s\e[0m\n" "Usage:"
+  # 4 underline
+  # 1 bold
+  printf "\e[0;4m\e[0;1m%s\e[0m" "Usage: "
+  printf "\e[0;1m%s\e[0m" "\$1: "
+  printf "%s" "\n"
   if [[ "\$#" -eq 0 ]]; then
     exit 1
   fi
