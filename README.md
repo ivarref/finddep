@@ -22,12 +22,12 @@ bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
 if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
-  printf "\e[0;1m\e[0;4m%s\e[0m" "Usage: "
-  printf "\e[0;1m%s\e[0m" "finddep "
+  printf "\e[0;1m\e[0;4m%s\e[0m" "Usage:"
+  printf "\e[0;1m%s\e[0m" " finddep "
   printf "%s" "NEEDLE"
   printf "\n\n"
   printf "Search in the default alias\n"
-  printf "\$ finddep asm\n\n"
+  printf "\$ finddep asm\n"
   printf "org.clojure/tools.deps {:mvn/version "0.26.1553"}\n"
   printf "  com.cognitect.aws/api {:mvn/version "0.8.762"}\n"
   printf "    org.clojure/core.async {:mvn/version "1.8.741"}\n"
