@@ -22,7 +22,7 @@ cat > "$HOME/.local/bin/finddep" <<EOF
 if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   printf "\e[0;1m\e[0;4m%s\e[0m" "Usage:"
   printf "\e[0;1m%s\e[0m" " finddep "
-  printf "%s" "NEEDLE"
+  printf "%s" "NEEDLE OPTIONS"
   printf "\n\n"
   printf "Search default alias\n"
   printf "\$ finddep asm\n\n"
@@ -50,16 +50,16 @@ chmod +x "$HOME/.local/bin/finddep"'
 
 ```
 $ finddep --help
-Usage: finddep NEEDLE
+Usage: finddep NEEDLE OPTIONS
 
-Search default alias
-$ finddep asm
+Search default alias:
+finddep asm
 
-Search a specific alias
-$ finddep asm :aliases [:build]
+Search a specific alias:
+finddep asm :aliases [:build]
 
-Search all aliases
-$ finddep asm :aliases all
+Search all aliases:
+finddep asm :aliases all
 
 Example output
 
