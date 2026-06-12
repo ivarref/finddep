@@ -48,7 +48,7 @@ chmod +x "$HOME/.local/bin/finddep"'
 
 ## Basic usage
 
-```bash
+```
 $ finddep --help
 Usage: finddep NEEDLE
 
@@ -72,7 +72,7 @@ org.clojure/tools.deps {:mvn/version 0.26.1553}
 
 ## Including children in the results
 
-```bash
+```
 $ finddep tools.analyzer.jvm :include-children true
 
 org.clojure/tools.deps {:mvn/version "0.19.1417"}
