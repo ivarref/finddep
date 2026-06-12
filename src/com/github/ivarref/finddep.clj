@@ -288,7 +288,7 @@
       (doseq [[root _] roots]
         (show-tree2 libs root needles 0 false)))))
 
-(defn find [{:keys [name aliases libs force-exit?] :as opts}]
+(defn find [{:keys [name aliases libs force-exit? expanded-tool?] :as opts}]
   (utils/require-deps-edn!)
   (cond
     (true? (utils/get-opts opts [:distinct :distinct?] false))
@@ -301,40 +301,64 @@
         :include-children? (utils/get-opts opts [:include-children :include-children?] false)))
 
     :else
-    (let [name (if (nil? name)
-                 (get opts 'name)
-                 name)
-          force-exit? (if (nil? force-exit?)
-                        true
-                        false)
-          aliases (or (utils/expand-aliases
-                        (if (nil? aliases)
-                          (get opts 'aliases)
-                          aliases))
-                      [])
-          include-children (or (utils/get-opt opts :include-children false)
-                               (utils/get-opt opts :include-children? false))
-          libs (or libs (get-libs aliases))
-          needles (find-needles libs (if (or (= name :all)
-                                             (= name :*))
-                                       ""
-                                       name))]
-      (if (= needles #{})
-        (binding [*out* *err*]
-          (println (str "No matches found for '" name "'."))
-          (println "Was it a typo?")
-          (if force-exit?
-            (System/exit 1)
-            nil))
-        (if include-children
-          (find-with-children libs name)
-          (let [libs (libs-with-needles libs needles)
-                roots (->> libs
-                           (filter (fn [[_k {:keys [dependents]}]]
-                                     (= dependents #{})))
-                           (sort-by (fn [[k _]] (str k))))]
-            (doseq [[root _] roots]
-              (show-tree libs root 0 false))))))))
+    (do
+      (let [name (if (nil? name)
+                   (get opts 'name)
+                   name)
+            force-exit? (if (nil? force-exit?)
+                          true
+                          false)
+            aliases'' (or (utils/expand-aliases
+                            (if (nil? aliases)
+                              (get opts 'aliases)
+                              aliases))
+                          [])
+            include-children (or (utils/get-opt opts :include-children false)
+                                 (utils/get-opt opts :include-children? false))
+            libs (or libs (get-libs aliases''))
+            needles (find-needles libs (if (or (= name :all)
+                                               (= name :*))
+                                         ""
+                                         name))
+            found? (atom false)]
+        (when (nil? expanded-tool?)
+          (doseq [alias aliases'']
+            (when (and (= :tool (utils/get-alias-type-2 alias)))
+              (let [alias' (if (string? alias)
+                             (keyword alias)
+                             alias)]
+                (when (true? (find (assoc opts
+                                     :expanded-tool? true
+                                     :aliases [alias'])))
+                  (reset! found? true))))))
+        (if (= needles #{})
+          (if expanded-tool?
+            false
+            (when (false? @found?)
+              (binding [*out* *err*]
+                (println (str "No matches found for '" name "'."))
+                (println "Was it a typo?")
+                (if force-exit?
+                  (System/exit 1)
+                  nil))))
+          (do
+            (when expanded-tool?
+              (println "Tool alias" (first aliases)))
+            (if include-children
+              (find-with-children libs name)
+              (let [libs (libs-with-needles libs needles)
+                    roots (->> libs
+                               (filter (fn [[_k {:keys [dependents]}]]
+                                         (= dependents #{})))
+                               (sort-by (fn [[k _]] (str k))))]
+                (doseq [[root _] roots]
+                  (show-tree libs
+                             root
+                             (if expanded-tool?
+                               1
+                               0)
+                             false))))
+            true))))))
 
 (defn fzf [{:keys [aliases] :as opts}]
   (utils/require-deps-edn!)

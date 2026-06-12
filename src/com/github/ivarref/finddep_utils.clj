@@ -74,6 +74,10 @@
    :exit!     (fn [code]
                 (System/exit code))})
 
+(defn get-alias-type-2 [alias]
+  (get-alias-type (read-deps-edn default-ctx)
+                  alias))
+
 (defn expand-aliases [aliases]
   (if (= aliases :all)
     (get-all-aliases default-ctx)
