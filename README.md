@@ -22,7 +22,10 @@ bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
 if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
-  echo "janei"
+  printf "\e[0;31m%s\e[0m\n" "Usage:"
+  if [[ "\$#" -eq 0 ]]; then
+    exit 1
+  fi
 else
   clojure -Tfinddep find :name "\$@"
 fi
