@@ -25,8 +25,16 @@ if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   # 4 underline
   # 1 bold
   printf "\e[0;4m\e[0;1m%s\e[0m" "Usage: "
-  printf "\e[0;1m%s\e[0m" "\$1: "
-  printf "%s" "\n"
+  printf "\e[0;1m%s\e[0m" "\$0: "
+  printf "%s" "NEEDLE"
+  printf "\n"
+  printf "\nExample:\n"
+  printf "\$0 asm\n\n"
+  printf "org.clojure/tools.deps {:mvn/version "0.26.1553"}\n"
+  printf "  com.cognitect.aws/api {:mvn/version "0.8.762"}\n"
+  printf "    org.clojure/core.async {:mvn/version "1.8.741"}\n"
+  printf "      org.clojure/tools.analyzer.jvm {:mvn/version "1.3.2"}\n"
+  printf "        org.ow2.asm/asm {:mvn/version "9.2"}\n"
   if [[ "\$#" -eq 0 ]]; then
     exit 1
   fi
