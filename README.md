@@ -13,7 +13,7 @@ bash -c '
 set -euo pipefail
 
 clojure -Ttools install com.github.ivarref/finddep \
-"{:git/tag \"0.1.107\" :git/sha \"3f5667298a691394f0da9e742b356f1f28b7b866\"}" \
+"{:git/tag \"0.1.109\" :git/sha \"140af739ecd075cb4d87eb50dc9985334e6507e2\"}" \
 :as finddep
 
 cat > "$HOME/.local/bin/finddep" <<EOF
