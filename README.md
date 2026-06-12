@@ -36,9 +36,9 @@ if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   printf "      org.clojure/tools.analyzer.jvm {:mvn/version "1.3.2"}\n"
   printf "        org.ow2.asm/asm {:mvn/version "9.2"}\n\n"
   printf "Search in a specific alias\n"
-  printf "finddep plexus-utils :aliases [:build]\n\n"
+  printf "finddep plexus-utils :aliases [:build]\n\n(output elided)\n\n"
   printf "Search in all aliases\n"
-  printf "finddep plexus-utils :aliases all\n"
+  printf "finddep plexus-utils :aliases all\n\n(output elided)\n"
   if [[ "\$#" -eq 0 ]]; then
     exit 1
   fi
