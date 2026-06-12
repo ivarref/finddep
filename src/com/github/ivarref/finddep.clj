@@ -348,7 +348,7 @@
                                      (keyword alias)
                                      alias)]
                         (swap! aliases''' conj alias')))
-                    (println "Aliases included in search:" (pr-str @aliases'''))))
+                    (println "Aliases included in search:" (pr-str (into [] (sort @aliases'''))))))
                 (if force-exit?
                   (System/exit 1)
                   nil))))

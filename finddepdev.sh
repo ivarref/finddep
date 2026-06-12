@@ -11,4 +11,4 @@ DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 clojure -Ttools install com.github.ivarref/finddep '{:local/root "'$DIR'"}' :as finddep2
 set -x
-clojure -Tfinddep2 $@
+clojure -Tfinddep2 "$@"
