@@ -21,10 +21,10 @@ also do the following:
 bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
-if [[ "$1" == "--help" ]]; then
+if [[ "\$1" == "--help" ]]; then
   echo "janei"
 else
-  clojure -Tfinddep find :name "$@"
+  clojure -Tfinddep find :name "\$@"
 fi
 EOF
 chmod +x "$HOME/.local/bin/finddep"'
