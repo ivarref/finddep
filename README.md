@@ -21,7 +21,7 @@ also do the following:
 bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
-if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]]; then
+if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   echo "janei"
 else
   clojure -Tfinddep find :name "\$@"
