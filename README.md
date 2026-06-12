@@ -6,19 +6,17 @@ If so then `finddep` is for you.
 
 ## Installation
 
-```
-clojure -Ttools install com.github.ivarref/finddep \
-'{:git/tag "0.1.105" :git/sha "f1dff7a9090b2b0b12cf130d3e201a2bb16f7a6a"}' \
-:as finddep
-```
-
-### Optional installation
-
-If you are only going to use the `:name` parameter search (see next section), you can
-also do the following:
+Paste this into your shell:
 
 ```bash
-bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
+bash -c '
+set -euo pipefail
+
+clojure -Ttools install com.github.ivarref/finddep \
+"{:git/tag \"0.1.105\" :git/sha \"f1dff7a9090b2b0b12cf130d3e201a2bb16f7a6a\"}" \
+:as finddep
+
+cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
 if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
@@ -26,11 +24,11 @@ if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   printf "\e[0;1m%s\e[0m" " finddep "
   printf "%s" "NEEDLE"
   printf "\n\n"
-  printf "Search in the default alias\n"
+  printf "Search default alias\n"
   printf "\$ finddep asm\n\n"
-  printf "Search in a specific alias\n"
+  printf "Search a specific alias\n"
   printf "\$ finddep asm :aliases [:build]\n\n"
-  printf "Search in all aliases\n"
+  printf "Search all aliases\n"
   printf "\$ finddep asm :aliases all\n\n"
   printf "Example output\n\n"
   printf "org.clojure/tools.deps {:mvn/version "0.26.1553"}\n"

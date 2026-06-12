@@ -7,8 +7,13 @@ LINE_PREFIX_TO_PATCH = 'clojure -Ttools install com.github.ivarref/finddep'
 LINE_POSTFIX = ':as finddep'
 
 def mod_line(line, tag, sha):
-    if line.startswith("'{:git/tag "):
-        return "'{:git/tag " + f'"{tag}" :git/sha ' + f'"{sha}"' + "}' \\"
+    if line.startswith('"{:git/tag '):
+        def q(s):
+            slashq = '\\"'
+            return slashq + s + slashq
+        prefix = '"{'
+        postfix = '}" \\'
+        return f'{prefix}:git/tag {q(tag)} :git/sha {q(sha)}{postfix}'
     else:
         return line
 
