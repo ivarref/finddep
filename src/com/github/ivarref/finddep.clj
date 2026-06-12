@@ -336,8 +336,19 @@
             false
             (when (false? @found?)
               (binding [*out* *err*]
-                (println (str "No matches found for '" name "'."))
-                (println "Was it a typo?")
+                (println (str "Error: No matches found for '" name "'."))
+                (println "Error: Was it a typo?")
+                (if (= [] aliases'')
+                  (do
+                    (println "Tip: Only default alias included. Use :aliases '[:test :build ...]' for additional aliases.")
+                    (println "Tip: Use :aliases :all to include all aliases."))
+                  (let [aliases''' (atom [])]
+                    (doseq [alias aliases'']
+                      (let [alias' (if (string? alias)
+                                     (keyword alias)
+                                     alias)]
+                        (swap! aliases''' conj alias')))
+                    (println "Aliases included in search:" (pr-str @aliases'''))))
                 (if force-exit?
                   (System/exit 1)
                   nil))))
