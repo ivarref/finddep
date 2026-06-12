@@ -18,16 +18,16 @@ If you are only going to use the `:name` parameter search (see next section), yo
 also do the following:
 
 ```bash
-cat "$HOME/.local/bin/finddep" <<EOF
+bash -c 'cat "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
 if [[ "$1" == "--help" ]]; then
   echo "janei"
 else
-  clojure -Tfinddep find :name "$@"'
+  clojure -Tfinddep find :name "$@"
 fi
-EOF \
-&& chmod +x "$HOME/.local/bin/finddep"
+EOF
+chmod +x "$HOME/.local/bin/finddep"'
 ```
 
 ## Usage with `:name` parameter search
