@@ -79,9 +79,14 @@
                   alias))
 
 (defn expand-aliases [aliases]
-  (if (= aliases :all)
-    (get-all-aliases default-ctx)
-    aliases))
+  (cond (= aliases :all)
+        (get-all-aliases default-ctx)
+
+        (= aliases 'all)
+        (get-all-aliases default-ctx)
+
+        :else
+        aliases))
 
 (defn get-opt [opts kw default]
   (assert (map? opts))
