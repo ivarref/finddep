@@ -46,7 +46,7 @@ EOF
 chmod +x "$HOME/.local/bin/finddep"'
 ```
 
-## Usage with `:name` parameter search
+## Basic usage
 
 ```bash
 $ finddep --help
@@ -109,6 +109,10 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
 ```
 
 Right, it so that's why it was included...
+
+### TODOs
+
+Fix tool alias expansion for fzf mode.
 
 ### Making a new release
 
