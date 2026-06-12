@@ -46,6 +46,8 @@ EOF
 chmod +x "$HOME/.local/bin/finddep"'
 ```
 
+This assumes that `$HOME/.local/bin` is on your `$PATH`.
+
 ## Basic usage
 
 ```
