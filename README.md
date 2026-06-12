@@ -28,15 +28,16 @@ if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   printf "\n\n"
   printf "Search in the default alias\n"
   printf "\$ finddep asm\n\n"
+  printf "Search in a specific alias\n"
+  printf "\$ finddep asm :aliases [:build]\n\n"
+  printf "Search in all aliases\n"
+  printf "\$ finddep asm :aliases all\n\n"
+  printf "Example output\n"
   printf "org.clojure/tools.deps {:mvn/version "0.26.1553"}\n"
   printf "  com.cognitect.aws/api {:mvn/version "0.8.762"}\n"
   printf "    org.clojure/core.async {:mvn/version "1.8.741"}\n"
   printf "      org.clojure/tools.analyzer.jvm {:mvn/version "1.3.2"}\n"
   printf "        org.ow2.asm/asm {:mvn/version "9.2"}\n\n"
-  printf "Search in a specific alias\n"
-  printf "\$ finddep plexus-utils :aliases [:build]\n(output elided)\n\n"
-  printf "Search in all aliases\n"
-  printf "\$ finddep plexus-utils :aliases all\n(output elided)\n"
   if [[ "\$#" -eq 0 ]]; then
     exit 1
   fi
