@@ -32,7 +32,7 @@ if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   printf "\$ finddep asm :aliases [:build]\n\n"
   printf "Search in all aliases\n"
   printf "\$ finddep asm :aliases all\n\n"
-  printf "Example output\n"
+  printf "Example output\n\n"
   printf "org.clojure/tools.deps {:mvn/version "0.26.1553"}\n"
   printf "  com.cognitect.aws/api {:mvn/version "0.8.762"}\n"
   printf "    org.clojure/core.async {:mvn/version "1.8.741"}\n"
