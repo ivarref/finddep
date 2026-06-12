@@ -18,8 +18,16 @@ If you are only going to use the `:name` parameter search (see next section), yo
 also do the following:
 
 ```bash
-echo -e '#!/usr/bin/env bash\nclojure -Tfinddep find :name "$@"' > \
-$HOME/.local/bin/finddep && chmod +x $HOME/.local/bin/finddep
+cat "$HOME/.local/bin/finddep" <<EOF
+#!/usr/bin/env bash
+
+if [[ "$1" == "--help" ]]; then
+  echo "janei"
+else
+  clojure -Tfinddep find :name "$@"'
+fi
+EOF \
+&& chmod +x "$HOME/.local/bin/finddep"
 ```
 
 ## Usage with `:name` parameter search
@@ -111,7 +119,7 @@ org.clojure/tools.deps {:mvn/version "0.19.1417"}
 
 ## License
 
-Copyright © 2023 — 2025 Ivar Refsdal
+Copyright © 2023 — 2026 Ivar Refsdal
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
