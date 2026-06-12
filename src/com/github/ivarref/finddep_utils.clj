@@ -85,6 +85,9 @@
         (= aliases 'all)
         (get-all-aliases default-ctx)
 
+        (keyword? aliases)
+        [aliases]
+
         :else
         aliases))
 
