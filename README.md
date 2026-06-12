@@ -37,7 +37,7 @@ if [[ "\$1" == "--help" ]] || [[ "\$1" == "-h" ]] || [[ "\$#" -eq 0 ]]; then
   printf "  com.cognitect.aws/api {:mvn/version "0.8.762"}\n"
   printf "    org.clojure/core.async {:mvn/version "1.8.741"}\n"
   printf "      org.clojure/tools.analyzer.jvm {:mvn/version "1.3.2"}\n"
-  printf "        org.ow2.asm/asm {:mvn/version "9.2"}\n\n"
+  printf "        org.ow2.asm/asm {:mvn/version "9.2"}\n"
   if [[ "\$#" -eq 0 ]]; then
     exit 1
   fi
