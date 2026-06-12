@@ -18,7 +18,7 @@ If you are only going to use the `:name` parameter search (see next section), yo
 also do the following:
 
 ```bash
-bash -c 'cat "$HOME/.local/bin/finddep" <<EOF
+bash -c 'cat > "$HOME/.local/bin/finddep" <<EOF
 #!/usr/bin/env bash
 
 if [[ "$1" == "--help" ]]; then
