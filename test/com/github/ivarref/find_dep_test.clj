@@ -7,6 +7,8 @@
             [com.github.ivarref.finddep :as fd]
             [com.github.ivarref.finddep2 :as fd2]))
 
+(reset! fd/enable-highlight false)
+
 (clj-commons.pretty.repl/install-pretty-exceptions)
 
 (t/deftest basic

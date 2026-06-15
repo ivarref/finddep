@@ -233,12 +233,40 @@
         (when (false? seen?)
           (show-tree2 libs k needles (inc indent) seen?))))))
 
-(defn show-tree [libs root indent seen?]
+(defn esc [c]
+  (str "\u001B[" c))
+
+(defn reset []
+  "\u001B[0m")
+
+(defn bold [] (esc "1m"))
+(defn underline [] (esc "4m"))
+
+(def enable-highlight (atom true))
+
+(defn maybe-highlight [needle-str lib-name]
+  (if @enable-highlight
+    (if (str/includes? lib-name needle-str)
+      (str
+        (bold)
+        (str/replace
+          lib-name
+          needle-str
+          (str (underline)
+               (bold)
+               needle-str
+               (reset)
+               (bold)))
+        (reset))
+      lib-name)
+    lib-name))
+
+(defn show-tree [needle-str libs root indent seen?]
   (let [lib (get libs root)]
     (println (str (str/join "" (repeat (* 2 indent) " "))
                   #_(str seen? " ")
                   #_(:height (get libs root) " ")
-                  root
+                  (maybe-highlight needle-str root)
                   " "
                   (version-str lib))))
   (let [children (->> libs
@@ -255,7 +283,7 @@
                     true
                     (contains? previous-seen k))]
         (when (false? seen?)
-          (show-tree libs k (inc indent) seen?))))))
+          (show-tree needle-str libs k (inc indent) seen?))))))
 
 (comment
   (let [libs (get-libs {:deps {'s3-wagon-private/s3-wagon-private {:mvn/version "1.3.5"}}})
@@ -277,7 +305,7 @@
       (when (= #{} dependents)
         (show-tree libs root 0 false)))))
 
-(defn find-with-children [libs name]
+(defn find-with-children [needle-str libs name]
   (let [needles (find-needles libs name)
         needles-with-children (find-needles2 libs name)
         libs (libs-with-needles libs needles-with-children)]
@@ -308,6 +336,8 @@
             force-exit? (if (nil? force-exit?)
                           true
                           false)
+            single-alias? (and (vector? aliases)
+                               (= 1 (count aliases)))
             aliases'' (or (utils/expand-aliases
                             (if (nil? aliases)
                               (get opts 'aliases)
@@ -316,14 +346,16 @@
             include-children (or (utils/get-opt opts :include-children false)
                                  (utils/get-opt opts :include-children? false))
             libs (or libs (get-libs aliases''))
-            needles (find-needles libs (if (or (= name :all)
-                                               (= name :*))
-                                         ""
-                                         name))
+            needle-str (if (or (= name :all)
+                               (= name :*))
+                         ""
+                         (str name))
+            needles (find-needles libs needle-str)
             found? (atom false)]
         (when (nil? expanded-tool?)
           (doseq [alias aliases'']
-            (when (and (= :tool (utils/get-alias-type-2 alias)))
+            (when (and (= :tool (utils/get-alias-type-2 alias))
+                       (not single-alias?))
               (let [alias' (if (string? alias)
                              (keyword alias)
                              alias)]
@@ -336,12 +368,10 @@
             false
             (when (false? @found?)
               (binding [*out* *err*]
-                (println (str "Error: No matches found for '" name "'."))
-                (println "Error: Was it a typo?")
-                (if (= [] aliases'')
-                  (do
-                    (println "Tip: Only default alias included. Use :aliases '[:test :build ...]' for additional aliases.")
-                    (println "Tip: Use :aliases :all to include all aliases."))
+                (when (= [] aliases'')
+                  (println "Tip: Only default alias included. Use :aliases '[:test :build ...]' for additional aliases.")
+                  (println "Tip: Use :aliases :all to include all aliases."))
+                (when-not (= [] aliases'')
                   (let [aliases''' (atom [])]
                     (doseq [alias aliases'']
                       (let [alias' (if (string? alias)
@@ -349,6 +379,8 @@
                                      alias)]
                         (swap! aliases''' conj alias')))
                     (println "Aliases included in search:" (pr-str (into [] (sort @aliases'''))))))
+                (println (str "Error: No matches found for '" name "'."))
+                (println "Error: Was it a typo?")
                 (if force-exit?
                   (System/exit 1)
                   nil))))
@@ -356,14 +388,15 @@
             (when expanded-tool?
               (println "Tool alias" (first aliases)))
             (if include-children
-              (find-with-children libs name)
+              (find-with-children needle-str libs name)
               (let [libs (libs-with-needles libs needles)
                     roots (->> libs
                                (filter (fn [[_k {:keys [dependents]}]]
                                          (= dependents #{})))
                                (sort-by (fn [[k _]] (str k))))]
                 (doseq [[root _] roots]
-                  (show-tree libs
+                  (show-tree needle-str
+                             libs
                              root
                              (if expanded-tool?
                                1
